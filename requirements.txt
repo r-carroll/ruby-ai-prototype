@@ -1,0 +1,10 @@
+pandas
+scikit-learn
+torch
+transformers
+fugashi
+ipadic
+unidic-lite
+protobuf
+onnx
+onnxscript

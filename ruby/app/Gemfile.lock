@@ -1,0 +1,47 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ffi (1.17.3)
+    ffi (1.17.3-aarch64-linux-gnu)
+    ffi (1.17.3-aarch64-linux-musl)
+    ffi (1.17.3-arm-linux-gnu)
+    ffi (1.17.3-arm-linux-musl)
+    ffi (1.17.3-arm64-darwin)
+    ffi (1.17.3-x86-linux-gnu)
+    ffi (1.17.3-x86-linux-musl)
+    ffi (1.17.3-x86_64-darwin)
+    ffi (1.17.3-x86_64-linux-gnu)
+    ffi (1.17.3-x86_64-linux-musl)
+    natto (1.2.0)
+      ffi (>= 1.9.0)
+    onnxruntime (0.10.1)
+      ffi
+    onnxruntime (0.10.1-aarch64-linux)
+      ffi
+    onnxruntime (0.10.1-arm64-darwin)
+      ffi
+    onnxruntime (0.10.1-x86_64-darwin)
+      ffi
+    onnxruntime (0.10.1-x86_64-linux)
+      ffi
+
+PLATFORMS
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux-gnu
+  arm-linux-musl
+  arm64-darwin
+  ruby
+  x86-linux-gnu
+  x86-linux-musl
+  x86_64-darwin
+  x86_64-linux-gnu
+  x86_64-linux-musl
+
+DEPENDENCIES
+  ffi
+  natto
+  onnxruntime
+
+BUNDLED WITH
+   2.6.7

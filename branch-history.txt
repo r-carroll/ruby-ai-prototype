@@ -1,0 +1,53 @@
+commit f431b20e47dbcd3e4f6df24c423ac2452fa391bb
+Author: Ryan Carroll <ryan8440@gmail.com>
+Date:   Sun Jan 11 18:46:13 2026 -0500
+
+    adding confusion matrix images
+
+commit 7b2a929a0a90706da6db8a9e6d6efa66694dd08f
+Author: Ryan Carroll <ryan8440@gmail.com>
+Date:   Wed Jan 7 21:39:14 2026 -0500
+
+    adding model and artifacts
+
+commit d2d9396e22b2feb252297c0023aa7044775c37de
+Author: Ryan Carroll <ryan8440@gmail.com>
+Date:   Mon Jan 5 20:51:39 2026 -0500
+
+    adding validation and train logic
+
+commit 9b43b9360f5dd58c295cef335f0398b295344a58
+Author: Ryan Carroll <ryan8440@gmail.com>
+Date:   Mon Jan 5 20:03:22 2026 -0500
+
+    adding bert model
+
+commit b4d5d8b6691bfb08a201a40e9eaa471ab81663e4
+Author: Ryan Carroll <ryan8440@gmail.com>
+Date:   Mon Jan 5 19:10:50 2026 -0500
+
+    adding baseline model
+
+commit 1812b4b7fcb2e630bdd26cfd26fb6a3db673cfbd
+Author: Ryan Carroll <ryan8440@gmail.com>
+Date:   Sun Jan 4 22:05:39 2026 -0500
+
+    loading the data
+
+commit 45279a42fb8e27737425011cd69bf2f91fdc9f89
+Author: Ryan Carroll <ryan8440@gmail.com>
+Date:   Sun Jan 4 21:51:20 2026 -0500
+
+    adding basic model shells
+
+commit 3f046e31f8dcdc3c229e0d363da9ba05ea758300
+Author: Ryan Carroll <ryan8440@gmail.com>
+Date:   Fri Jan 2 22:08:06 2026 -0500
+
+    adding base and pretrained data
+
+commit 721d6fdb3fcf661329c58e049dfcfb25f73a0920
+Author: Emilio Miller <emilio.miller@siriusfederal.com>
+Date:   Fri Feb 28 22:31:07 2025 +0000
+
+    Update file README.md

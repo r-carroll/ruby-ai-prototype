@@ -1,0 +1,5 @@
+source "https://rubygems.org"
+
+gem "natto" # MeCab binding
+gem "onnxruntime" # Pre-packaged ONNX Runtime bindings
+gem "ffi"   # Keeping FFI just in case

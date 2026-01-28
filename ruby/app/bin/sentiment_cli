@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+
+# Adjust load path so we can require from lib
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+
+require "japanese_sentiment_analyzer"
+
+def main
+  if ARGV.empty?
+    puts "Usage: bin/sentiment_cli <text>"
+    puts "Example: bin/sentiment_cli 'これは最高の商品です'"
+    exit 1
+  end
+
+  text = ARGV.join(" ")
+
+  # Initialize analyzer
+  # Assuming models/model.onnx is relative to the project root or app root.
+  # We construct the absolute path relative to this script.
+  model_path = File.expand_path("../models/model.onnx", __dir__)
+  
+  unless File.exist?(model_path)
+    puts "Error: Model not found at #{model_path}"
+    puts "Please ensure 'models/model.onnx' (and .data) are present."
+    exit 1
+  end
+
+  analyzer = JapaneseSentimentAnalyzer.new(model_path: model_path)
+
+  begin
+    result = analyzer.predict(text)
+    label = result[:label]
+    score = result[:score]
+    
+    puts "Label: #{label} (#{score.round(2)})"
+  rescue StandardError => e
+    puts "Error during prediction: #{e.message}"
+    exit 1
+  end
+end
+
+if __FILE__ == $0
+  main
+end
