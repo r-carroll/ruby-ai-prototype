@@ -88,11 +88,22 @@ class FortuneGeneratorService
     generated_content = @tokenizer.decode(generated_tokens)
     
     # STRIP WEB NOISE & HALLUCINATIONS
-    # Remove symbols like ♪, ☆, ■ and date-like strings
-    generated_content = generated_content.gsub(/[♪☆★■◆●○]|[0-9]+月[0-9]+日|（[^）]+）|\([^\)]+\)/, '')
+    # 1. Remove URLs and domain fragments
+    generated_content = generated_content.gsub(/https?:\/\/[\S]+/, '')
+    generated_content = generated_content.gsub(/[a-zA-Z0-9\-\.]+\.(jp|com|net|org|info)\/\S*/, '')
+    
+    # 2. Remove web markers like [続きを読む], (12月10日), etc.
+    generated_content = generated_content.gsub(/\[[^\]]+\]/, '')
+    generated_content = generated_content.gsub(/（[^）]+）|\([^\)]+\)/, '')
+    
+    # 3. Strip web symbols and dates
+    generated_content = generated_content.gsub(/[♪☆★■◆●○]|[0-9]+月[0-9]+日/, '')
+
+    # 4. Standard cleanup
     generated_content = generated_content.gsub(/[」。」]/, '').strip
     
-    generated_content = "穏やかな心で過ごせば、自ずと道は開けるでしょう" if generated_content.length < 2
+    # 5. Fallback
+    generated_content = "穏やかな心で過ごせば、自ずと道は開けるでしょう" if generated_content.length < 3
     
     {
       rank: rank,
