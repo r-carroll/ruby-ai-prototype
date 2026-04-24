@@ -54,8 +54,8 @@
     <h2 class="text-xs font-black uppercase tracking-[0.3em] text-stone-400 text-center mb-8">Recent Spiritual Echoes</h2>
     <div id="recent_fortunes" class="grid grid-cols-1 gap-4">
       <% @fortunes.each do |f| %>
-        <div class="bg-white/80 backdrop-blur-sm p-5 border-b-2 border-stone-200 flex justify-between items-center group hover:bg-white transition-colors">
-          <div class="flex flex-col">
+        <%= link_to fortune_path(f), class: "bg-white/80 backdrop-blur-sm p-5 border-b-2 border-stone-200 flex justify-between items-center group hover:bg-white transition-colors no-underline" do %>
+          <div class="flex flex-col text-left">
             <span class="text-stone-400 text-[10px] font-bold uppercase mb-1">Observation #<%= f.id %></span>
             <span class="text-stone-600 font-serif">"<%= f.input_text %>"</span>
           </div>
@@ -65,7 +65,7 @@
             </span>
             <span class="text-[10px] text-stone-400 italic"><%= f.sentiment_label.capitalize %></span>
           </div>
-        </div>
+        <% end %>
       <% end %>
     </div>
   </footer>

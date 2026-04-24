@@ -37,7 +37,7 @@
              style="width: <%= [(fortune.score.abs * 100).to_i, 100].min %>%"></div>
       </div>
       <span class="text-[9px] font-bold text-stone-400 uppercase tracking-tighter whitespace-nowrap">
-        BERT Confidence: <%= (fortune.score.abs * 100).round(1) %>%
+        <%= fortune.sentiment_label %> | BERT Confidence: <%= (fortune.score.abs * 100).round(1) %>%
       </span>
     </div>
   </div>
@@ -52,10 +52,16 @@
   </div>
 
   <!-- Action -->
-  <div class="text-center border-t border-stone-100 pt-8">
-    <%= link_to root_path, class: "group inline-flex flex-col items-center no-underline" do %>
-      <span class="text-red-800 font-black text-sm tracking-widest uppercase group-hover:text-red-600 transition-colors">Return to Shrine</span>
-      <span class="text-[10px] text-stone-300 mt-1 italic">Draw another destiny</span>
+  <div class="text-center border-t border-stone-100 pt-8 flex flex-col items-center space-y-6">
+    <div data-controller="share" data-share-url-value="<%= fortune_url(fortune) %>">
+      <button data-action="click->share#copy" class="group flex flex-col items-center cursor-pointer">
+        <span data-share-target="label" class="text-red-800 font-black text-sm tracking-widest uppercase group-hover:text-red-600 transition-colors">Copy Divine Link</span>
+        <span class="text-[10px] text-stone-300 mt-1 italic">Share this destiny</span>
+      </button>
+    </div>
+
+    <%= link_to root_path, class: "group flex flex-col items-center no-underline" do %>
+      <span class="text-stone-400 font-bold text-xs tracking-widest uppercase group-hover:text-stone-600 transition-colors">Return to Shrine</span>
     <% end %>
   </div>
 
