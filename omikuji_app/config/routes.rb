@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  root "fortunes#index"
+  resources :fortunes, only: [:index, :create, :show]
+  get "fortunes/create"
+  get "fortunes/show"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

@@ -1,0 +1,16 @@
+<!-- omikuji_app/app/views/fortunes/create.turbo_stream.erb -->
+
+<%= turbo_stream.replace "fortune_result" do %>
+  <div id="fortune_result" class="mt-8 animate-bounce-in">
+    <%= render template: "fortunes/show", locals: { fortune: @fortune } %>
+  </div>
+<% end %>
+
+<%= turbo_stream.prepend "recent_fortunes" do %>
+  <div class="bg-white p-4 border border-stone-100 flex justify-between items-center text-sm animate-fade-in">
+    <span class="text-gray-600 truncate max-w-xs">"<%= @fortune.input_text %>"</span>
+    <span class="font-bold <%= @fortune.sentiment_label == 'positive' ? 'text-green-700' : 'text-amber-700' %>">
+      <%= @fortune.rank %>
+    </span>
+  </div>
+<% end %>

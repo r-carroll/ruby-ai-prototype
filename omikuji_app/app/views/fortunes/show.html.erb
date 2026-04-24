@@ -1,0 +1,47 @@
+<!-- omikuji_app/app/views/fortunes/show.html.erb -->
+
+<div class="max-w-md mx-auto my-12 bg-white border-2 border-stone-200 shadow-xl p-6 font-serif relative overflow-hidden">
+  <!-- Decorative Header -->
+  <div class="text-center border-b-2 border-red-800 pb-4 mb-6">
+    <h2 class="text-3xl text-red-800 font-bold tracking-widest">御神籤</h2>
+    <p class="text-xs text-gray-400 mt-1 uppercase">Omikuji Serial #<%= format('%04d', @fortune.id) %></p>
+  </div>
+
+  <!-- Rank (The Big Blessing) -->
+  <div class="text-center mb-10 py-4 bg-stone-50 border-y border-stone-100">
+    <span class="text-6xl font-black text-red-700 tracking-tighter">
+      <%= @fortune.rank.split(' ').first %>
+    </span>
+    <p class="text-sm text-gray-500 mt-2 italic"><%= @fortune.rank.split(' ').last %></p>
+  </div>
+
+  <!-- Sentiment Analysis Detail (The Technical Flex) -->
+  <div class="mb-8 px-4 border-l-4 border-red-800">
+    <h3 class="text-sm font-bold text-gray-400 uppercase mb-2">The Inner Mood</h3>
+    <p class="text-lg text-gray-800 mb-2">"<%= @fortune.input_text %>"</p>
+    <div class="flex items-center space-x-2">
+      <span class="text-xs bg-gray-100 px-2 py-1 rounded">BERT Score: <%= @fortune.score.round(4) %></span>
+      <span class="text-xs font-bold <%= @fortune.sentiment_label == 'positive' ? 'text-green-600' : 'text-amber-600' %>">
+        Detected: <%= @fortune.sentiment_label.capitalize %>
+      </span>
+    </div>
+  </div>
+
+  <!-- The Fortune Text (GPT-2 Output) -->
+  <div class="mb-10 text-center px-4">
+    <h3 class="text-sm font-bold text-gray-400 uppercase mb-4">Divine Guidance</h3>
+    <p class="text-2xl leading-relaxed text-gray-900 leading-tight">
+      <%= @fortune.fortune_text %>
+    </p>
+  </div>
+
+  <!-- Social Link -->
+  <div class="text-center border-t border-stone-100 pt-6 mt-8">
+    <%= link_to "← Draw Another", root_path, class: "text-red-800 hover:underline font-bold" %>
+  </div>
+
+  <!-- Background Watermark -->
+  <div class="absolute -bottom-8 -right-8 opacity-5 transform rotate-12">
+    <h2 class="text-9xl font-black">⛩️</h2>
+  </div>
+</div>
