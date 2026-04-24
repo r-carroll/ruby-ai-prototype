@@ -39,15 +39,23 @@ class SentimentAnalysisService
     results = @bert_session.predict(inputs)
     logits = results["output"] # results is a hash with output names as keys
 
-    # 4. Process Results (Softmax/Argmax)
-    # logits is an array of arrays: [[neg_score, pos_score]]
-    scores = logits.first
-    prediction_idx = scores.index(scores.max)
+    # 4. Process Results (Softmax)
+    # logits is an array: [neg_logit, pos_logit]
+    logits_array = results["output"].first
+    
+    # Standard Softmax implementation
+    max_logit = logits_array.max
+    exp_logits = logits_array.map { |l| Math.exp(l - max_logit) }
+    sum_exp = exp_logits.sum
+    probabilities = exp_logits.map { |e| e / sum_exp }
+    
+    # Higher probability wins
+    prediction_idx = probabilities.index(probabilities.max)
     
     {
       label: LABELS[prediction_idx],
-      score: scores[prediction_idx],
-      all_scores: scores,
+      score: probabilities[prediction_idx], # This will now be between 0.0 and 1.0
+      all_scores: probabilities,
       text: @text
     }
   end
