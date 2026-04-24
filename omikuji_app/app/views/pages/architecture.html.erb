@@ -97,11 +97,15 @@
   </section>
 
   <footer class="mt-32 text-center animate-slide-up" style="animation-delay: 0.8s">
-    <%= link_to root_path, class: "group inline-flex items-center space-x-4 bg-red-800 text-white px-10 py-5 rounded-full hover:bg-stone-900 transition-all shadow-2xl hover:shadow-stone-900/30 active:scale-95" do %>
+    <%= link_to root_path, class: "group inline-flex items-center space-x-4 bg-red-800 text-white px-10 py-5 rounded-full hover:bg-stone-900 transition-all shadow-2xl hover:shadow-stone-900/30 active:scale-95 mb-12" do %>
       <span class="text-sm font-black uppercase tracking-[0.2em]">Return to the Shrine</span>
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
       </svg>
     <% end %>
+    
+    <div class="block">
+      <%= link_to "carrollmedia.dev", "https://carrollmedia.dev", target: "_blank", class: "text-[10px] font-black text-stone-400 hover:text-red-800 transition-colors uppercase tracking-[0.4em]" %>
+    </div>
   </footer>
 </div>
