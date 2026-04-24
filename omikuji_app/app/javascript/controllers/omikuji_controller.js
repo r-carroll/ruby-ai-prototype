@@ -19,5 +19,9 @@ export default class extends Controller {
     this.boxTarget.classList.remove("animate-shake")
     this.buttonTarget.disabled = false
     this.loadingTarget.classList.add("hidden")
+    
+    // Clear the text area for the next draw
+    const textArea = this.element.querySelector("textarea")
+    if (textArea) textArea.value = ""
   }
 }

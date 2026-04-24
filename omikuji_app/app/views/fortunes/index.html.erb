@@ -25,7 +25,9 @@
       </p>
 
       <%= form_with model: @fortune, 
-          data: { action: "turbo:submit-start->omikuji#shake" },
+          data: { 
+            action: "turbo:submit-start->omikuji#shake turbo:submit-end->omikuji#reset" 
+          },
           class: "space-y-8" do |f| %>
         
         <div>
