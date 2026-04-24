@@ -50,7 +50,11 @@
     </div>
   </main>
 
-  <footer class="mt-20">
+  <footer class="mt-20 pb-20">
+    <div class="text-center mb-12">
+      <%= link_to "Technical Architecture", architecture_path, class: "text-stone-300 hover:text-red-800 text-[10px] uppercase tracking-widest font-black transition-colors" %>
+    </div>
+    
     <h2 class="text-xs font-black uppercase tracking-[0.3em] text-stone-400 text-center mb-8">Recent Spiritual Echoes</h2>
     <div id="recent_fortunes" class="grid grid-cols-1 gap-4">
       <% @fortunes.each do |f| %>

@@ -1,0 +1,89 @@
+<!-- omikuji_app/app/views/pages/architecture.html.erb -->
+
+<div class="max-w-4xl mx-auto py-16 px-4 font-serif text-stone-800">
+  <header class="text-center mb-20">
+    <h1 class="text-5xl font-black mb-4 tracking-tight">System Architecture</h1>
+    <p class="text-xl text-stone-500 italic">Technical Implementation of Sentiment Omikuji</p>
+    <div class="w-24 h-1 bg-red-800 mx-auto mt-6"></div>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20">
+    <!-- Layer 1: Analysis -->
+    <div class="space-y-4">
+      <div class="text-3xl">👂</div>
+      <h3 class="text-xl font-bold border-b border-stone-200 pb-2">The Ear</h3>
+      <p class="text-sm text-stone-600 leading-relaxed">
+        <strong>BERT (Sentiment)</strong><br>
+        A fine-tuned <code>cl-tohoku/bert-base-japanese-v3</code> model detects the user's emotional state.
+      </p>
+      <ul class="text-[10px] font-mono text-stone-400 space-y-1">
+        <li>- MeCab Morphological Analysis</li>
+        <li>- WordPiece Tokenization</li>
+        <li>- Local ONNX Inference</li>
+      </ul>
+    </div>
+
+    <!-- Layer 2: Generation -->
+    <div class="space-y-4">
+      <div class="text-3xl">🗣️</div>
+      <h3 class="text-xl font-bold border-b border-stone-200 pb-2">The Voice</h3>
+      <p class="text-sm text-stone-600 leading-relaxed">
+        <strong>GPT-2 (Generative)</strong><br>
+        A <code>rinna/japanese-gpt2-small</code> model generates a mystical fortune based on the detected sentiment.
+      </p>
+      <ul class="text-[10px] font-mono text-stone-400 space-y-1">
+        <li>- Top-P (Nucleus) Sampling</li>
+        <li>- Repetition Penalty (1.4)</li>
+        <li>- Nucleus Sampling (0.9)</li>
+      </ul>
+    </div>
+
+    <!-- Layer 3: Delivery -->
+    <div class="space-y-4">
+      <div class="text-3xl">⛩️</div>
+      <h3 class="text-xl font-bold border-b border-stone-200 pb-2">The Shrine</h3>
+      <p class="text-sm text-stone-600 leading-relaxed">
+        <strong>Rails Monolith</strong><br>
+        A modern Rails 7.x application serving as the UI and real-time inference coordinator.
+      </p>
+      <ul class="text-[10px] font-mono text-stone-400 space-y-1">
+        <li>- Turbo Streams (Instant UI)</li>
+        <li>- Stimulus Animations</li>
+        <li>- Singleton Model Loading</li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="bg-stone-50 border-4 border-double border-stone-200 p-10 mb-20 shadow-sm">
+    <h2 class="text-2xl font-bold mb-8 text-center uppercase tracking-widest">Inference Pipeline</h2>
+    <div class="space-y-8">
+      <div class="flex items-start space-x-6">
+        <div class="bg-red-800 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold mt-1">1</div>
+        <div>
+          <h4 class="font-bold">Morphological Segmentation</h4>
+          <p class="text-sm text-stone-500">The <code>natto</code> gem interfaces with <code>MeCab</code> to split Japanese text into semantic units (morphemes), ensuring input matches the BERT training data.</p>
+        </div>
+      </div>
+
+      <div class="flex items-start space-x-6">
+        <div class="bg-red-800 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold mt-1">2</div>
+        <div>
+          <h4 class="font-bold">Deep Learning Inference</h4>
+          <p class="text-sm text-stone-500">Raw tokens are passed to the <code>onnxruntime</code> engine. BERT processes the [CLS] token to output sentiment logits, which are then normalized via Softmax in Ruby.</p>
+        </div>
+      </div>
+
+      <div class="flex items-start space-x-6">
+        <div class="bg-red-800 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold mt-1">3</div>
+        <div>
+          <h4 class="font-bold">Autoregressive Generation</h4>
+          <p class="text-sm text-stone-500">GPT-2 is seeded with a mystical prompt and the [CLS] probability. It recursively predicts the next token until a terminal punctuation mark is reached.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="text-center">
+    <%= link_to "← Back to the Shrine", root_path, class: "text-red-800 font-black hover:underline uppercase tracking-widest text-sm" %>
+  </footer>
+</div>
