@@ -8,3 +8,19 @@ venv/
 *.onnx
 *.onnx.data
 *.dylib
+
+# Rails
+omikuji_app/config/master.key
+omikuji_app/log/*
+omikuji_app/tmp/*
+!omikuji_app/log/.keep
+!omikuji_app/tmp/.keep
+omikuji_app/storage/*
+!omikuji_app/storage/.keep
+omikuji_app/public/assets
+omikuji_app/public/packs
+omikuji_app/public/system
+omikuji_app/node_modules
+omikuji_app/.yarn-integrity
+omikuji_app/.byebug_history
+omikuji_app/vendor/bundle
