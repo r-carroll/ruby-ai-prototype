@@ -25,5 +25,9 @@ primary_region = "nrt"
   cpu_kind = "shared"
   cpus = 1
 
+[[mounts]]
+  source = "omikuji_data"
+  destination = "/rails/storage"
+
 [deploy]
   release_command = "./bin/rails db:prepare"
