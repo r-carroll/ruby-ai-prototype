@@ -2,14 +2,16 @@
 
 require 'onnxruntime'
 require 'tokenizers'
+require 'natto'
 
 class ModelLoader
   include Singleton
 
-  attr_reader :bert_session, :bert_tokenizer, :gpt_session, :gpt_tokenizer
+  attr_reader :bert_session, :bert_tokenizer, :gpt_session, :gpt_tokenizer, :mecab
 
   def initialize
     @models_path = Rails.root.join('vendor', 'models')
+    @mecab = Natto::MeCab.new
     
     # Load BERT Sentiment Model
     bert_path = @models_path.join('model.onnx')
@@ -21,6 +23,16 @@ class ModelLoader
       @bert_tokenizer = Tokenizers::Tokenizer.new(Tokenizers::Models::WordPiece.new(vocab: vocab))
       @bert_tokenizer.normalizer = Tokenizers::Normalizers::BertNormalizer.new
       @bert_tokenizer.pre_tokenizer = Tokenizers::PreTokenizers::BertPreTokenizer.new
+
+      # Add Post-Processor for [CLS] and [SEP]
+      @bert_tokenizer.post_processor = Tokenizers::Processors::TemplateProcessing.new(
+        single: "[CLS] $A [SEP]",
+        pair: "[CLS] $A [SEP] $B:1 [SEP]:1",
+        special_tokens: [
+          ["[CLS]", 2],
+          ["[SEP]", 3]
+        ]
+      )
     end
 
     # Load GPT-2 Japanese Generative Model
