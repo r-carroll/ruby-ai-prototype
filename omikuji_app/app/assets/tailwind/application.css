@@ -26,16 +26,16 @@
   --animate-slide-up: slide-up 1s ease-out forwards;
 }
 
-body {
-  @apply bg-stone-100 text-stone-900;
-  background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
-}
-
-.washi-paper {
+@utility washi-paper {
   background-color: #f9f6f0;
   background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
 }
 
-.writing-vertical {
+@utility writing-vertical {
   writing-mode: vertical-rl;
+}
+
+body {
+  @apply bg-stone-100 text-stone-900;
+  background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
 }
