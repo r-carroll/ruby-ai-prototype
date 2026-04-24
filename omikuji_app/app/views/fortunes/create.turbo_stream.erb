@@ -2,7 +2,7 @@
 
 <%= turbo_stream.replace "fortune_result" do %>
   <div id="fortune_result" class="mt-8 animate-bounce-in">
-    <%= render template: "fortunes/show", locals: { fortune: @fortune } %>
+    <%= render partial: "fortunes/show", locals: { fortune: @fortune } %>
   </div>
 <% end %>
 
