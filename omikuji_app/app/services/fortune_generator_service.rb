@@ -7,8 +7,8 @@ class FortuneGeneratorService
   }.freeze
 
   PROMPTS = {
-    positive: "運勢は大吉です。アドバイス：",
-    negative: "運勢は末吉です。アドバイス："
+    positive: "吉兆の兆しあり。お告げ：「",
+    negative: "慎重に歩むべし。お告げ：「"
   }.freeze
 
   def initialize(sentiment_label)
@@ -16,6 +16,9 @@ class FortuneGeneratorService
     @loader = ModelLoader.instance
     @session = @loader.gpt_session
     @tokenizer = @loader.gpt_tokenizer
+    @temperature = 0.8
+    @top_k = 40
+    @repetition_penalty = 1.2
   end
 
   def generate
@@ -23,15 +26,13 @@ class FortuneGeneratorService
 
     # 1. Pick a rank and a starting prompt
     rank = RANKS[@sentiment].sample
-    prompt = "#{PROMPTS[@sentiment]}「"
+    prompt = PROMPTS[@sentiment]
     
     # 2. Tokenize the prompt
     tokens = @tokenizer.encode(prompt).ids
     
-    # 3. Simple Greedy Generation (generate 20 tokens)
-    20.times do
-      # GPT-2 expects [batch_size, seq_len]
-      # Some models also expect position_ids
+    # 3. Sampling Generation (generate up to 40 tokens)
+    40.times do
       position_ids = (0...tokens.size).to_a
       attention_mask = [1] * tokens.size
       inputs = { 
@@ -40,26 +41,55 @@ class FortuneGeneratorService
         "attention_mask" => [attention_mask]
       }
       
-      # The ONNX model returns logits
       outputs = @session.predict(inputs)
-      logits = outputs["logits"] # Shape: [1, seq_len, vocab_size]
+      logits = outputs["logits"][0].last # Get logits for the last token
       
-      # Get the logits for the LAST token in the sequence
-      last_token_logits = logits[0].last
+      # Apply Repetition Penalty
+      tokens.uniq.each do |token_id|
+        if logits[token_id] > 0
+          logits[token_id] /= @repetition_penalty
+        else
+          logits[token_id] *= @repetition_penalty
+        end
+      end
+
+      # Apply Temperature
+      logits = logits.map { |l| l / @temperature }
+
+      # Top-K Sampling
+      # 1. Map to indices and sort by value
+      indexed_logits = logits.each_with_index.to_a.sort_by { |val, idx| -val }
+      # 2. Keep only top K
+      top_k_logits = indexed_logits.take(@top_k)
       
-      # Greedy choice: pick the highest logit
-      next_token_id = last_token_logits.index(last_token_logits.max)
+      # 3. Softmax and Sample
+      values = top_k_logits.map(&:first)
+      max_val = values.max
+      exp_values = values.map { |v| Math.exp(v - max_val) }
+      sum_exp = exp_values.sum
+      probs = exp_values.map { |e| e / sum_exp }
+
+      # Random sampling from the probability distribution
+      r = rand
+      cumulative = 0
+      next_token_id = top_k_logits.last.last # Default to last if something goes wrong
       
+      probs.each_with_index do |p, i|
+        cumulative += p
+        if r < cumulative
+          next_token_id = top_k_logits[i].last
+          break
+        end
+      end
+
       tokens << next_token_id
       
-      # Stop if we hit an End-of-Text token (usually 0 or 2 in many JP models)
-      break if next_token_id == 2 
+      # Stop if we hit an End-of-Text or a closing bracket
+      break if next_token_id == 2 || @tokenizer.decode([next_token_id]).include?("」")
     end
 
-    # 4. Decode the result
+    # 4. Decode and Cleanup
     full_text = @tokenizer.decode(tokens)
-    
-    # Clean up the output (remove the prompt and add a closing bracket)
     generated_content = full_text.sub(prompt, "").split("」").first
     
     {
