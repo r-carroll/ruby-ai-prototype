@@ -1,76 +1,105 @@
 <!-- omikuji_app/app/views/fortunes/index.html.erb -->
 
-<div class="max-w-2xl mx-auto py-12 px-4" data-controller="omikuji">
-  <header class="text-center mb-12">
-    <h1 class="text-6xl font-serif text-stone-800 mb-2 tracking-tighter">感情おみくじ</h1>
-    <p class="text-xl text-stone-500 italic font-serif">Deep Learning Sentiment Fortune</p>
-    <div class="w-32 h-1 bg-red-800 mx-auto mt-6"></div>
+<div class="max-w-3xl mx-auto py-20 px-4 min-h-screen flex flex-col" data-controller="omikuji">
+  <!-- Top Nav / Prominent Architecture Link -->
+  <nav class="flex justify-between items-center mb-16 animate-slide-up">
+    <div class="flex items-center space-x-2">
+      <span class="text-2xl font-black text-red-800 tracking-widest">御神籤</span>
+      <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-stone-400">v2.0</span>
+    </div>
+    <%= link_to architecture_path, class: "group flex items-center space-x-3 bg-stone-900 text-white px-5 py-2.5 rounded-full hover:bg-red-800 transition-all shadow-xl hover:shadow-red-900/20 active:scale-95" do %>
+      <span class="text-[10px] font-black uppercase tracking-widest">Technical Architecture</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-400 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+      </svg>
+    <% end %>
+  </nav>
+
+  <header class="text-center mb-16 animate-slide-up" style="animation-delay: 0.1s">
+    <h1 class="text-7xl font-serif text-stone-800 mb-4 tracking-tighter">感情おみくじ</h1>
+    <p class="text-xl text-stone-500 font-serif max-w-md mx-auto leading-relaxed">
+      A self-contained Japanese AI monolith. <br>
+      <span class="text-stone-400 text-sm font-sans font-bold uppercase tracking-widest">Inference at the Edge of Rails</span>
+    </p>
   </header>
 
-  <main class="washi-paper border-double border-8 border-stone-200 p-10 shadow-2xl rounded-sm transition-all duration-500">
-    <div class="text-center mb-8">
-      <div class="mb-10 relative">
-        <!-- The Shaking Box Icon -->
-        <div data-omikuji-target="box" class="inline-block text-8xl mb-4 transition-transform">
+  <main class="washi-paper relative p-1 pb-1 shadow-2xl rounded-xl transition-all duration-700 animate-slide-up" style="animation-delay: 0.2s">
+    <div class="bg-white/40 rounded-[calc(0.75rem-1px)] p-12 text-center">
+      <div class="mb-12 relative">
+        <div data-omikuji-target="box" class="inline-block text-9xl animate-float drop-shadow-2xl grayscale-[0.2] hover:grayscale-0 transition-all cursor-default">
           ⛩️
         </div>
-        <div data-omikuji-target="loading" class="hidden absolute top-full left-0 right-0 mt-2">
-          <p class="text-red-800 font-serif animate-pulse">神託を待っています... (The spirits are thinking...)</p>
+        <div data-omikuji-target="loading" class="hidden absolute top-full left-0 right-0 mt-4">
+          <div class="flex flex-col items-center">
+            <div class="w-12 h-0.5 bg-red-800 animate-[pulse_1s_infinite]"></div>
+            <p class="text-red-800 font-serif text-sm mt-4 tracking-widest animate-pulse uppercase font-black">Consulting the Spirits...</p>
+          </div>
         </div>
       </div>
 
-      <p class="text-xl text-stone-700 mb-8 font-serif leading-relaxed">
+      <p class="text-2xl text-stone-800 mb-10 font-serif leading-relaxed">
         今の心の内を綴ってください。<br>
-        <span class="text-sm text-stone-400 italic">(Type your thoughts in Japanese)</span>
+        <span class="text-xs text-stone-400 font-sans font-bold uppercase tracking-widest mt-2 block">Tell the spirits how you feel</span>
       </p>
 
       <%= form_with model: @fortune, 
-          data: { 
-            action: "turbo:submit-start->omikuji#shake turbo:submit-end->omikuji#reset" 
-          },
-          class: "space-y-8" do |f| %>
+          data: { action: "turbo:submit-start->omikuji#shake turbo:submit-end->omikuji#reset" },
+          class: "space-y-10" do |f| %>
         
-        <div>
+        <div class="relative group">
           <%= f.text_area :input_text, 
               rows: 3, 
-              class: "w-full p-6 bg-white/50 border-stone-200 focus:ring-red-800 focus:border-red-800 text-2xl font-serif shadow-inner rounded-sm",
+              class: "w-full p-8 bg-stone-50/50 border-none focus:ring-2 focus:ring-red-800/20 text-3xl font-serif shadow-inner rounded-lg transition-all placeholder:text-stone-200",
               placeholder: "今日はとても..." %>
+          <div class="absolute bottom-4 right-4 text-[10px] font-bold text-stone-300 uppercase tracking-tighter pointer-events-none group-focus-within:opacity-0 transition-opacity">
+            Japanese Input Recommended
+          </div>
         </div>
         
-        <div class="pt-4">
-          <%= f.submit "おみくじを引く (Draw Fortune)", 
+        <div>
+          <%= f.submit "おみくじを引く (Draw Destiny)", 
               data: { omikuji_target: "button" },
-              class: "group relative bg-red-800 text-white px-12 py-5 text-2xl font-bold hover:bg-red-900 transition-all cursor-pointer shadow-lg rounded-sm overflow-hidden" %>
+              class: "w-full bg-red-800 text-white px-8 py-6 text-xl font-black uppercase tracking-[0.2em] hover:bg-stone-900 transition-all cursor-pointer shadow-[0_20px_40px_-10px_rgba(153,27,27,0.3)] hover:shadow-[0_20px_40px_-10px_rgba(28,25,23,0.3)] rounded-lg active:scale-[0.98]" %>
         </div>
       <% end %>
     </div>
 
-    <div id="fortune_result" class="mt-12">
+    <div id="fortune_result" class="mt-1">
       <!-- Result injected here via Turbo -->
     </div>
   </main>
 
-  <footer class="mt-20 pb-20">
-    <div class="text-center mb-12">
-      <%= link_to "Technical Architecture", architecture_path, class: "text-stone-500 hover:text-red-800 text-[10px] uppercase tracking-widest font-black transition-colors" %>
+  <section class="mt-32 mb-20 animate-slide-up" style="animation-delay: 0.4s">
+    <div class="flex items-center space-x-4 mb-10">
+      <div class="h-[1px] flex-grow bg-stone-200"></div>
+      <h2 class="text-[10px] font-black uppercase tracking-[0.4em] text-stone-400">Recent Spiritual Echoes</h2>
+      <div class="h-[1px] flex-grow bg-stone-200"></div>
     </div>
     
-    <h2 class="text-xs font-black uppercase tracking-[0.3em] text-stone-600 text-center mb-8">Recent Spiritual Echoes</h2>
-    <div id="recent_fortunes" class="grid grid-cols-1 gap-4">
+    <div id="recent_fortunes" class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <% @fortunes.each do |f| %>
-        <%= link_to fortune_path(f), class: "bg-white/80 backdrop-blur-sm p-5 border-b-2 border-stone-200 flex justify-between items-center group hover:bg-white transition-colors no-underline" do %>
-          <div class="flex flex-col text-left">
-            <span class="text-stone-500 text-[10px] font-bold uppercase mb-1">Observation #<%= f.id %></span>
-            <span class="text-stone-800 font-serif">"<%= f.input_text %>"</span>
+        <%= link_to fortune_path(f), class: "glass-card p-6 rounded-xl flex justify-between items-center group hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all no-underline" do %>
+          <div class="flex flex-col text-left pr-4">
+            <span class="text-stone-400 text-[9px] font-bold uppercase mb-2 tracking-widest">Echo #<%= f.id %></span>
+            <span class="text-stone-700 font-serif text-lg leading-tight line-clamp-1 italic">"<%= f.input_text %>"</span>
           </div>
-          <div class="text-right">
-            <span class="block font-black text-lg <%= f.sentiment_label == 'positive' ? 'text-green-800' : 'text-amber-800' %>">
+          <div class="text-right flex-shrink-0">
+            <span class="block font-black text-2xl <%= f.sentiment_label == 'positive' ? 'text-green-800' : 'text-amber-800' %> tracking-tighter">
               <%= f.rank.split(' ').first %>
             </span>
-            <span class="text-[10px] text-stone-500 italic font-bold uppercase"><%= f.sentiment_label %></span>
+            <div class="flex items-center justify-end space-x-1 mt-1">
+              <div class="w-1.5 h-1.5 rounded-full <%= f.sentiment_label == 'positive' ? 'bg-green-500' : 'bg-amber-500' %>"></div>
+              <span class="text-[8px] text-stone-400 font-black uppercase"><%= f.sentiment_label %></span>
+            </div>
           </div>
         <% end %>
       <% end %>
     </div>
+  </section>
+
+  <footer class="mt-auto py-10 border-t border-stone-200/60 text-center">
+    <p class="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em]">
+      Built with Rails 7 & ONNX Runtime • Local Inference Only
+    </p>
   </footer>
 </div>

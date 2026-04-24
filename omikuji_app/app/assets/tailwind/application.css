@@ -18,24 +18,33 @@
   }
 
   @keyframes slide-up {
-    0% { transform: translateY(100%); opacity: 0; }
+    0% { transform: translateY(30px); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
   }
 
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+
   --animate-shake: shake 0.5s infinite;
-  --animate-slide-up: slide-up 1s ease-out forwards;
+  --animate-slide-up: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-float: float 6s ease-in-out infinite;
 }
 
 @utility washi-paper {
-  background-color: #f9f6f0;
-  background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+  background-color: #ffffff;
+  background-image: url("https://www.transparenttextures.com/patterns/white-diamond.png");
+  @apply shadow-[0_30px_100px_-10px_rgba(0,0,0,0.1),0_10px_30px_-10px_rgba(0,0,0,0.05)];
 }
 
-@utility writing-vertical {
-  writing-mode: vertical-rl;
+@utility glass-card {
+  @apply bg-white/70 backdrop-blur-md border border-white/40 shadow-sm;
 }
 
 body {
-  @apply bg-stone-100 text-stone-900;
-  background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
+  @apply bg-[#f4f2ee] text-stone-900;
+  background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.8) 0%, rgba(244,242,238,1) 100%), 
+                    url("https://www.transparenttextures.com/patterns/silk.png");
 }

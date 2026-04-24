@@ -1,89 +1,107 @@
 <!-- omikuji_app/app/views/pages/architecture.html.erb -->
 
-<div class="max-w-4xl mx-auto py-16 px-4 font-serif text-stone-800">
-  <header class="text-center mb-20">
-    <h1 class="text-5xl font-black mb-4 tracking-tight">System Architecture</h1>
-    <p class="text-xl text-stone-600 italic">Technical Implementation of Sentiment Omikuji</p>
-    <div class="w-24 h-1 bg-red-800 mx-auto mt-6"></div>
+<div class="max-w-5xl mx-auto py-24 px-6 font-sans text-stone-800">
+  <header class="text-center mb-24 animate-slide-up">
+    <div class="inline-block bg-stone-900 text-white px-4 py-1.5 rounded-full mb-8">
+      <span class="text-[10px] font-black uppercase tracking-[0.3em]">Full Stack AI Implementation</span>
+    </div>
+    <h1 class="text-7xl font-serif font-black mb-6 tracking-tighter text-stone-900">System Architecture</h1>
+    <p class="text-xl text-stone-500 font-serif italic max-w-2xl mx-auto">
+      Bypassing the cloud. A technical breakdown of high-performance deep learning inference running natively in Ruby on Rails.
+    </p>
   </header>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-20">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
     <!-- Layer 1: Analysis -->
-    <div class="space-y-4">
-      <div class="text-3xl">👂</div>
-      <h3 class="text-xl font-bold border-b border-stone-200 pb-2">The Ear</h3>
-      <p class="text-sm text-stone-600 leading-relaxed">
-        <strong>BERT (Sentiment)</strong><br>
-        A fine-tuned <code>cl-tohoku/bert-base-japanese-v3</code> model detects the user's emotional state.
+    <div class="bg-stone-900 text-white p-10 rounded-3xl shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-slide-up" style="animation-delay: 0.1s">
+      <div class="bg-red-800 w-12 h-12 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-red-900/40">
+        <span class="text-2xl">👂</span>
+      </div>
+      <h3 class="text-2xl font-serif font-bold mb-4 italic">The Ear</h3>
+      <p class="text-stone-400 text-sm leading-relaxed mb-8">
+        <strong>BERT Analysis</strong><br>
+        Fine-tuned <code>bert-base-japanese-v3</code> model localized to the Ruby process.
       </p>
-      <ul class="text-[10px] font-mono text-stone-400 space-y-1">
-        <li>- MeCab Morphological Analysis</li>
-        <li>- WordPiece Tokenization</li>
-        <li>- Local ONNX Inference</li>
-      </ul>
+      <div class="space-y-3 pt-6 border-t border-white/10">
+        <div class="flex items-center text-[10px] font-black uppercase tracking-widest text-stone-500">
+          <div class="w-1 h-1 bg-red-600 rounded-full mr-2"></div> MeCab Integration
+        </div>
+        <div class="flex items-center text-[10px] font-black uppercase tracking-widest text-stone-500">
+          <div class="w-1 h-1 bg-red-600 rounded-full mr-2"></div> WordPiece Tokenizer
+        </div>
+      </div>
     </div>
 
     <!-- Layer 2: Generation -->
-    <div class="space-y-4">
-      <div class="text-3xl">🗣️</div>
-      <h3 class="text-xl font-bold border-b border-stone-200 pb-2">The Voice</h3>
-      <p class="text-sm text-stone-600 leading-relaxed">
-        <strong>GPT-2 (Generative)</strong><br>
-        A <code>rinna/japanese-gpt2-small</code> model generates a mystical fortune based on the detected sentiment.
+    <div class="bg-white p-10 rounded-3xl shadow-xl hover:-translate-y-2 transition-all duration-500 border border-stone-100 animate-slide-up" style="animation-delay: 0.2s">
+      <div class="bg-stone-100 w-12 h-12 rounded-2xl flex items-center justify-center mb-8">
+        <span class="text-2xl">🗣️</span>
+      </div>
+      <h3 class="text-2xl font-serif font-bold mb-4 italic text-stone-900">The Voice</h3>
+      <p class="text-stone-500 text-sm leading-relaxed mb-8">
+        <strong>GPT-2 Generative</strong><br>
+        <code>rinna/japanese-gpt2-small</code> performing real-time autoregressive text completion.
       </p>
-      <ul class="text-[10px] font-mono text-stone-400 space-y-1">
-        <li>- Top-P (Nucleus) Sampling</li>
-        <li>- Repetition Penalty (1.4)</li>
-        <li>- Nucleus Sampling (0.9)</li>
-      </ul>
+      <div class="space-y-3 pt-6 border-t border-stone-100">
+        <div class="flex items-center text-[10px] font-black uppercase tracking-widest text-stone-400">
+          <div class="w-1 h-1 bg-stone-900 rounded-full mr-2"></div> Nucleus Sampling
+        </div>
+        <div class="flex items-center text-[10px] font-black uppercase tracking-widest text-stone-400">
+          <div class="w-1 h-1 bg-stone-900 rounded-full mr-2"></div> Repetition Penalty
+        </div>
+      </div>
     </div>
 
     <!-- Layer 3: Delivery -->
-    <div class="space-y-4">
-      <div class="text-3xl">⛩️</div>
-      <h3 class="text-xl font-bold border-b border-stone-200 pb-2">The Shrine</h3>
-      <p class="text-sm text-stone-600 leading-relaxed">
+    <div class="bg-stone-900 text-white p-10 rounded-3xl shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-slide-up" style="animation-delay: 0.3s">
+      <div class="bg-red-800 w-12 h-12 rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-red-900/40">
+        <span class="text-2xl">⛩️</span>
+      </div>
+      <h3 class="text-2xl font-serif font-bold mb-4 italic">The Shrine</h3>
+      <p class="text-stone-400 text-sm leading-relaxed mb-8">
         <strong>Rails Monolith</strong><br>
-        A modern Rails 7.x application serving as the UI and real-time inference coordinator.
+        Coordinating state, persistence, and inference without external API overhead.
       </p>
-      <ul class="text-[10px] font-mono text-stone-400 space-y-1">
-        <li>- Turbo Streams (Instant UI)</li>
-        <li>- Stimulus Animations</li>
-        <li>- Singleton Model Loading</li>
-      </ul>
+      <div class="space-y-3 pt-6 border-t border-white/10">
+        <div class="flex items-center text-[10px] font-black uppercase tracking-widest text-stone-500">
+          <div class="w-1 h-1 bg-red-600 rounded-full mr-2"></div> Turbo Streams
+        </div>
+        <div class="flex items-center text-[10px] font-black uppercase tracking-widest text-stone-500">
+          <div class="w-1 h-1 bg-red-600 rounded-full mr-2"></div> Stimulus FX
+        </div>
+      </div>
     </div>
   </div>
 
-  <section class="bg-stone-50 border-4 border-double border-stone-200 p-10 mb-20 shadow-sm">
-    <h2 class="text-2xl font-bold mb-8 text-center uppercase tracking-widest">Inference Pipeline</h2>
-    <div class="space-y-8">
-      <div class="flex items-start space-x-6">
-        <div class="bg-red-800 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold mt-1">1</div>
-        <div>
-          <h4 class="font-bold">Morphological Segmentation</h4>
-          <p class="text-sm text-stone-500">The <code>natto</code> gem interfaces with <code>MeCab</code> to split Japanese text into semantic units (morphemes), ensuring input matches the BERT training data.</p>
-        </div>
-      </div>
+  <section class="max-w-3xl mx-auto space-y-20">
+    <div class="relative pl-12 animate-slide-up" style="animation-delay: 0.4s">
+       <div class="absolute left-0 top-2 w-0.5 h-full bg-gradient-to-b from-red-800 to-transparent"></div>
+       <div class="absolute left-[-4px] top-2 w-2.5 h-2.5 bg-red-800 rounded-full shadow-[0_0_15px_rgba(153,27,27,0.5)]"></div>
+       <h2 class="text-2xl font-serif font-bold mb-4 italic">01. Local Tokenization</h2>
+       <p class="text-stone-500 leading-relaxed">Unlike English, Japanese has no spaces. We interface directly with the system's <code>MeCab</code> analyzer via the <code>natto</code> gem to perform morphological segmentation before passing tokens to our local <code>WordPiece</code> and <code>SentencePiece</code> encoders.</p>
+    </div>
 
-      <div class="flex items-start space-x-6">
-        <div class="bg-red-800 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold mt-1">2</div>
-        <div>
-          <h4 class="font-bold">Deep Learning Inference</h4>
-          <p class="text-sm text-stone-500">Raw tokens are passed to the <code>onnxruntime</code> engine. BERT processes the [CLS] token to output sentiment logits, which are then normalized via Softmax in Ruby.</p>
-        </div>
-      </div>
+    <div class="relative pl-12 animate-slide-up" style="animation-delay: 0.5s">
+       <div class="absolute left-0 top-2 w-0.5 h-full bg-gradient-to-b from-stone-900 to-transparent"></div>
+       <div class="absolute left-[-4px] top-2 w-2.5 h-2.5 bg-stone-900 rounded-full"></div>
+       <h2 class="text-2xl font-serif font-bold mb-4 italic">02. The ONNX Engine</h2>
+       <p class="text-stone-500 leading-relaxed">The <code>onnxruntime</code> gem allows Ruby to execute pre-trained Python models at C++ speeds. We load both the BERT and GPT-2 weights into a thread-safe singleton, ensuring sub-second inference latency for real-time user interaction.</p>
+    </div>
 
-      <div class="flex items-start space-x-6">
-        <div class="bg-red-800 text-white w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 font-bold mt-1">3</div>
-        <div>
-          <h4 class="font-bold">Autoregressive Generation</h4>
-          <p class="text-sm text-stone-500">GPT-2 is seeded with a mystical prompt and the [CLS] probability. It recursively predicts the next token until a terminal punctuation mark is reached.</p>
-        </div>
-      </div>
+    <div class="relative pl-12 animate-slide-up" style="animation-delay: 0.6s">
+       <div class="absolute left-0 top-2 w-0.5 h-8 bg-stone-200"></div>
+       <div class="absolute left-[-4px] top-2 w-2.5 h-2.5 bg-stone-200 rounded-full"></div>
+       <h2 class="text-2xl font-serif font-bold mb-4 italic">03. Deterministic Decoding</h2>
+       <p class="text-stone-500 leading-relaxed">To ensure high-quality fortunes from a small LLM, we implemented a custom <code>Nucleus (Top-P)</code> sampling algorithm in Ruby. By penalizing repetitive tokens and strictly controlling the temperature, the model delivers varied yet coherent mystical insights.</p>
     </div>
   </section>
 
-  <footer class="text-center">
-    <%= link_to "← Back to the Shrine", root_path, class: "text-red-800 font-black hover:underline uppercase tracking-widest text-sm" %>
+  <footer class="mt-32 text-center animate-slide-up" style="animation-delay: 0.8s">
+    <%= link_to root_path, class: "group inline-flex items-center space-x-4 bg-red-800 text-white px-10 py-5 rounded-full hover:bg-stone-900 transition-all shadow-2xl hover:shadow-stone-900/30 active:scale-95" do %>
+      <span class="text-sm font-black uppercase tracking-[0.2em]">Return to the Shrine</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+    <% end %>
   </footer>
 </div>
