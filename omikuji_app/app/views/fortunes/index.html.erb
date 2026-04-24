@@ -1,48 +1,68 @@
 <!-- omikuji_app/app/views/fortunes/index.html.erb -->
 
-<div class="max-w-2xl mx-auto py-12 px-4">
+<div class="max-w-2xl mx-auto py-12 px-4" data-controller="omikuji">
   <header class="text-center mb-12">
-    <h1 class="text-5xl font-serif text-gray-800 mb-2">感情おみくじ</h1>
-    <p class="text-xl text-gray-600 italic">Sentiment Omikuji</p>
-    <div class="w-24 h-1 bg-red-700 mx-auto mt-4"></div>
+    <h1 class="text-6xl font-serif text-stone-800 mb-2 tracking-tighter">感情おみくじ</h1>
+    <p class="text-xl text-stone-500 italic font-serif">Deep Learning Sentiment Fortune</p>
+    <div class="w-32 h-1 bg-red-800 mx-auto mt-6"></div>
   </header>
 
-  <main class="bg-stone-50 border-double border-4 border-stone-200 p-8 shadow-sm">
+  <main class="washi-paper border-double border-8 border-stone-200 p-10 shadow-2xl rounded-sm transition-all duration-500">
     <div class="text-center mb-8">
-      <p class="text-lg text-gray-700 mb-6">
-        How are you feeling right now? <br>
-        <span class="text-sm text-gray-500">(Enter a thought in Japanese to receive your fortune)</span>
+      <div class="mb-10 relative">
+        <!-- The Shaking Box Icon -->
+        <div data-omikuji-target="box" class="inline-block text-8xl mb-4 transition-transform">
+          ⛩️
+        </div>
+        <div data-omikuji-target="loading" class="hidden absolute top-full left-0 right-0 mt-2">
+          <p class="text-red-800 font-serif animate-pulse">神託を待っています... (The spirits are thinking...)</p>
+        </div>
+      </div>
+
+      <p class="text-xl text-stone-700 mb-8 font-serif leading-relaxed">
+        今の心の内を綴ってください。<br>
+        <span class="text-sm text-stone-400 italic">(Type your thoughts in Japanese)</span>
       </p>
 
-      <%= form_with model: @fortune, class: "space-y-6" do |f| %>
+      <%= form_with model: @fortune, 
+          data: { action: "turbo:submit-start->omikuji#shake" },
+          class: "space-y-8" do |f| %>
+        
         <div>
           <%= f.text_area :input_text, 
               rows: 3, 
-              class: "w-full p-4 border-stone-300 focus:ring-red-700 focus:border-red-700 text-lg font-serif",
+              class: "w-full p-6 bg-white/50 border-stone-200 focus:ring-red-800 focus:border-red-800 text-2xl font-serif shadow-inner rounded-sm",
               placeholder: "今日はとても..." %>
         </div>
         
-        <div>
-          <%= f.submit "Draw a Fortune (おみくじを引く)", 
-              class: "bg-red-800 text-white px-8 py-3 text-lg font-bold hover:bg-red-900 transition-colors cursor-pointer shadow-md" %>
+        <div class="pt-4">
+          <%= f.submit "おみくじを引く (Draw Fortune)", 
+              data: { omikuji_target: "button" },
+              class: "group relative bg-red-800 text-white px-12 py-5 text-2xl font-bold hover:bg-red-900 transition-all cursor-pointer shadow-lg rounded-sm overflow-hidden" %>
         </div>
       <% end %>
     </div>
 
-    <div id="fortune_result">
-      <!-- Turbo will inject the result here -->
+    <div id="fortune_result" class="mt-12">
+      <!-- Result injected here via Turbo -->
     </div>
   </main>
 
-  <footer class="mt-16">
-    <h2 class="text-sm font-bold uppercase tracking-widest text-gray-400 text-center mb-6">Recent Blessings</h2>
+  <footer class="mt-20">
+    <h2 class="text-xs font-black uppercase tracking-[0.3em] text-stone-400 text-center mb-8">Recent Spiritual Echoes</h2>
     <div id="recent_fortunes" class="grid grid-cols-1 gap-4">
       <% @fortunes.each do |f| %>
-        <div class="bg-white p-4 border border-stone-100 flex justify-between items-center text-sm">
-          <span class="text-gray-600 truncate max-w-xs">"<%= f.input_text %>"</span>
-          <span class="font-bold <%= f.sentiment_label == 'positive' ? 'text-green-700' : 'text-amber-700' %>">
-            <%= f.rank %>
-          </span>
+        <div class="bg-white/80 backdrop-blur-sm p-5 border-b-2 border-stone-200 flex justify-between items-center group hover:bg-white transition-colors">
+          <div class="flex flex-col">
+            <span class="text-stone-400 text-[10px] font-bold uppercase mb-1">Observation #<%= f.id %></span>
+            <span class="text-stone-600 font-serif">"<%= f.input_text %>"</span>
+          </div>
+          <div class="text-right">
+            <span class="block font-black text-lg <%= f.sentiment_label == 'positive' ? 'text-green-800' : 'text-amber-800' %>">
+              <%= f.rank.split(' ').first %>
+            </span>
+            <span class="text-[10px] text-stone-400 italic"><%= f.sentiment_label.capitalize %></span>
+          </div>
         </div>
       <% end %>
     </div>
