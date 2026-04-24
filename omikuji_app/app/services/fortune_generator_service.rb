@@ -7,8 +7,8 @@ class FortuneGeneratorService
   }.freeze
 
   PROMPTS = {
-    positive: "吉兆の兆しあり。お告げ：「",
-    negative: "慎重に歩むべし。お告げ：「"
+    positive: "【神託】素晴らしい運気です。和歌のごとく、心穏やかに過ごせば幸運が舞い込みます。助言：「",
+    negative: "【神託】今は嵐の前の静けさ。焦らず、自分を見つめ直す時です。助言：「"
   }.freeze
 
   def initialize(sentiment_label)
@@ -16,22 +16,19 @@ class FortuneGeneratorService
     @loader = ModelLoader.instance
     @session = @loader.gpt_session
     @tokenizer = @loader.gpt_tokenizer
-    @temperature = 0.8
-    @top_k = 40
-    @repetition_penalty = 1.2
+    @temperature = 0.7
+    @top_p = 0.9
+    @repetition_penalty = 1.5
   end
 
   def generate
     return "AI fortune teller is resting... (Model not loaded)" unless @session && @tokenizer
 
-    # 1. Pick a rank and a starting prompt
     rank = RANKS[@sentiment].sample
     prompt = PROMPTS[@sentiment]
-    
-    # 2. Tokenize the prompt
     tokens = @tokenizer.encode(prompt).ids
     
-    # 3. Sampling Generation (generate up to 40 tokens)
+    # 40 tokens max for the wisdom
     40.times do
       position_ids = (0...tokens.size).to_a
       attention_mask = [1] * tokens.size
@@ -42,53 +39,62 @@ class FortuneGeneratorService
       }
       
       outputs = @session.predict(inputs)
-      logits = outputs["logits"][0].last # Get logits for the last token
-      
-      # Apply Repetition Penalty
-      tokens.uniq.each do |token_id|
-        if logits[token_id] > 0
-          logits[token_id] /= @repetition_penalty
-        else
-          logits[token_id] *= @repetition_penalty
-        end
-      end
+      logits = outputs["logits"][0].last
 
-      # Apply Temperature
+      # 1. Repetition Penalty
+      tokens.uniq.each { |tid| logits[tid] /= @repetition_penalty if logits[tid] > 0 }
+
+      # 2. Ban non-Japanese characters (roughly) to prevent "ove-one" English slips
+      # We allow common Japanese punctuation and all characters above ID 500 
+      # (Most JP models put Latin/English in the 0-200 range)
+      (33..126).each { |id| logits[id] = -100 } # Banning most ASCII printable chars
+
+      # 3. Temperature
       logits = logits.map { |l| l / @temperature }
 
-      # Top-K Sampling
-      # 1. Map to indices and sort by value
-      indexed_logits = logits.each_with_index.to_a.sort_by { |val, idx| -val }
-      # 2. Keep only top K
-      top_k_logits = indexed_logits.take(@top_k)
+      # 4. Top-P (Nucleus) Sampling
+      indexed_logits = logits.each_with_index.to_a.sort_by { |v, i| -v }
       
-      # 3. Softmax and Sample
-      values = top_k_logits.map(&:first)
-      max_val = values.max
-      exp_values = values.map { |v| Math.exp(v - max_val) }
-      sum_exp = exp_values.sum
-      probs = exp_values.map { |e| e / sum_exp }
-
-      # Random sampling from the probability distribution
-      r = rand
-      cumulative = 0
-      next_token_id = top_k_logits.last.last # Default to last if something goes wrong
+      # Convert to probabilities for Top-P calculation
+      max_v = indexed_logits[0][0]
+      exp_v = indexed_logits.map { |v, i| Math.exp(v - max_v) }
+      sum_exp = exp_v.sum
+      probs = exp_v.map { |e| e / sum_exp }
       
+      cumulative_prob = 0
+      cutoff_index = 0
       probs.each_with_index do |p, i|
-        cumulative += p
-        if r < cumulative
-          next_token_id = top_k_logits[i].last
+        cumulative_prob += p
+        cutoff_index = i
+        break if cumulative_prob > @top_p
+      end
+      
+      top_p_logits = indexed_logits.take(cutoff_index + 1)
+      
+      # Re-calculate probabilities for the selected subset
+      subset_exp = top_p_logits.map { |v, i| Math.exp(v - max_v) }
+      subset_sum = subset_exp.sum
+      subset_probs = subset_exp.map { |e| e / subset_sum }
+
+      # Sample
+      r = rand
+      cum = 0
+      next_token_id = top_p_logits.last.last
+      subset_probs.each_with_index do |p, i|
+        cum += p
+        if r < cum
+          next_token_id = top_p_logits[i].last
           break
         end
       end
 
       tokens << next_token_id
       
-      # Stop if we hit an End-of-Text or a closing bracket
-      break if next_token_id == 2 || @tokenizer.decode([next_token_id]).include?("」")
+      # Stop if we hit EOS or a closing bracket
+      decoded_char = @tokenizer.decode([next_token_id])
+      break if next_token_id == 2 || decoded_char.include?("」")
     end
 
-    # 4. Decode and Cleanup
     full_text = @tokenizer.decode(tokens)
     generated_content = full_text.sub(prompt, "").split("」").first
     
