@@ -1,0 +1,23 @@
+# .flyignore for Sentiment Omikuji
+# This file tells flyctl what NOT to upload to Fly.io for builds.
+# We explicitly allow model files because they are in the root .gitignore.
+
+.git/
+.gitignore
+.dockerignore
+/log/*
+/tmp/*
+/node_modules/
+/app/assets/builds/*
+/public/assets
+
+# Do NOT ignore model files
+!*.onnx
+!*.onnx.data
+!spiece.model
+!vocab.txt
+!tokenizer.json
+!config.json
+!generation_config.json
+!special_tokens_map.json
+!tokenizer_config.json

@@ -15,7 +15,14 @@ class SentimentAnalysisService
   end
 
   def predict
-    return { error: "Model or Tokenizer not loaded" } unless @bert_session && @tokenizer
+    unless @bert_session && @tokenizer
+      return {
+        label: :neutral,
+        score: 0.5,
+        text: @text,
+        error: "Model or Tokenizer not loaded"
+      }
+    end
 
     # BERT Japanese models expect text to be pre-segmented by MeCab
     segmented_text = @loader.mecab.parse(@text).split("\n").map { |line| line.split("\t").first }.join(" ")

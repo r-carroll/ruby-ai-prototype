@@ -22,10 +22,15 @@ class FortuneGeneratorService
   end
 
   def generate
-    return "AI fortune teller is resting... (Model not loaded)" unless @session && @tokenizer
+    unless @session && @tokenizer
+      return {
+        rank: "平 (Heira)",
+        fortune: "「AIおみくじは現在お休み中です（モデルが読み込まれていません）」"
+      }
+    end
 
-    rank = RANKS[@sentiment].sample
-    prompt = PROMPTS[@sentiment]
+    rank = (RANKS[@sentiment] || ["平 (Heira)"]).sample
+    prompt = PROMPTS[@sentiment] || "【神託】静かな心で日々を過ごしましょう。助言："
     
     # Pre-seed with the opening bracket
     prompt_tokens = @tokenizer.encode(prompt).ids
