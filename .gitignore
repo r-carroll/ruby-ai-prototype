@@ -1,2 +1,10 @@
 .DS_Store
 __pycache__/*
+venv/
+
+# Large files
+*.csv
+*.safetensors
+*.onnx
+*.onnx.data
+*.dylib
