@@ -49,7 +49,9 @@ class ModelLoader
   end
 end
 
-# Pre-load models on boot in production/development if desired
-# Rails.application.config.after_initialize do
-#   ModelLoader.instance
-# end
+# Pre-load models on boot in production/development
+Rails.application.config.after_initialize do
+  # We use a thread to not block the boot process if it takes too long, 
+  # but in production we want this ready.
+  Thread.new { ModelLoader.instance }
+end

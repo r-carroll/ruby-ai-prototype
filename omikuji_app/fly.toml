@@ -28,7 +28,7 @@ primary_region = "nrt"
 [[vm]]
   memory = "2gb"
   cpu_kind = "shared"
-  cpus = 1
+  cpus = 2
 
 [[mounts]]
   source = "omikuji_data"
@@ -42,10 +42,10 @@ primary_region = "nrt"
   protocol = "tcp"
   
   [[services.http_checks]]
-    interval = "10s"
-    grace_period = "300s" # Give it 5 minutes to load models
+    interval = "15s"
+    grace_period = "600s" # 10 minutes for model loading
     method = "get"
     path = "/up"
     protocol = "http"
-    timeout = "5s"
+    timeout = "10s"
 

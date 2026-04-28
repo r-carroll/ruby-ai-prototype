@@ -38,8 +38,9 @@ class FortuneGeneratorService
     tokens = prompt_tokens + [bracket_id]
     
     40.times do
-      position_ids = (0...tokens.size).to_a
-      attention_mask = [1] * tokens.size
+      current_tokens_size = tokens.size
+      position_ids = (0...current_tokens_size).to_a
+      attention_mask = [1] * current_tokens_size
       inputs = { 
         "input_ids" => [tokens],
         "position_ids" => [position_ids],
@@ -49,37 +50,45 @@ class FortuneGeneratorService
       outputs = @session.predict(inputs)
       logits = outputs["logits"][0].last
 
-      # Repetition Penalty
+      # Repetition Penalty (Only penalize tokens actually present)
       tokens.uniq.each { |tid| logits[tid] /= @repetition_penalty if logits[tid] > 0 }
 
-      # Ban weird symbols and excessive ASCII to keep it "clean"
+      # Ban common "web noise" ASCII and symbols (optimized)
       [33, 34, 35, 36, 37, 38, 42, 60, 62, 124].each { |id| logits[id] = -100 }
 
-      # Temperature & Top-P Sampling
-      logits = logits.map { |l| l / @temperature }
-      indexed_logits = logits.each_with_index.to_a.sort_by { |v, i| -v }
+      # Temperature
+      logits.map! { |l| l / @temperature }
+      
+      # Top-P Sampling (Optimized: only sort once and use array methods)
+      indexed_logits = logits.each_with_index.to_a.sort_by! { |v, i| -v }
       
       max_v = indexed_logits[0][0]
-      exp_v = indexed_logits.map { |v, i| Math.exp(v - max_v) }
-      sum_exp = exp_v.sum
-      probs = exp_v.map { |e| e / sum_exp }
+      # Shift logits to prevent exp overflow
+      exp_logits = indexed_logits.map { |v, i| Math.exp(v - max_v) }
+      total_exp = exp_logits.sum
       
       cumulative_prob = 0
       cutoff_index = 0
-      probs.each_with_index { |p, i| cumulative_prob += p; cutoff_index = i; break if cumulative_prob > @top_p }
+      exp_logits.each_with_index do |exp_val, i|
+        cumulative_prob += (exp_val / total_exp)
+        if cumulative_prob > @top_p
+          cutoff_index = i
+          break
+        end
+      end
       
-      top_p_logits = indexed_logits.take(cutoff_index + 1)
-      subset_exp = top_p_logits.map { |v, i| Math.exp(v - max_v) }
-      subset_sum = subset_exp.sum
-      subset_probs = subset_exp.map { |e| e / subset_sum }
-
-      r = rand
+      # Slice to Top-P candidates
+      top_p_exp = exp_logits[0..cutoff_index]
+      top_p_sum = top_p_exp.sum
+      
+      r = rand * top_p_sum
       cum = 0
-      next_token_id = top_p_logits.last.last
-      subset_probs.each_with_index do |p, i|
-        cum += p
-        if r < cum
-          next_token_id = top_p_logits[i].last
+      next_token_id = indexed_logits[cutoff_index].last
+      
+      top_p_exp.each_with_index do |exp_val, i|
+        cum += exp_val
+        if r <= cum
+          next_token_id = indexed_logits[i].last
           break
         end
       end
