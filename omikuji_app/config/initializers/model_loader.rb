@@ -3,6 +3,15 @@
 require 'onnxruntime'
 require 'tokenizers'
 require 'natto'
+require 'marky_markov'
+
+# Monkeypatch for marky_markov compatibility with Ruby 3.2+
+# The gem uses File.exists? which was removed in Ruby 3.2.
+unless File.respond_to?(:exists?)
+  def File.exists?(path)
+    exist?(path)
+  end
+end
 
 class ModelLoader
   include Singleton
