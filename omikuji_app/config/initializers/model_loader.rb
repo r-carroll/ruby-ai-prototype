@@ -7,7 +7,7 @@ require 'natto'
 class ModelLoader
   include Singleton
 
-  attr_reader :bert_session, :bert_tokenizer, :gpt_session, :gpt_tokenizer, :mecab
+  attr_reader :bert_session, :bert_tokenizer, :mecab, :markov_dictionary
 
   def initialize
     @models_path = Rails.root.join('vendor', 'models')
@@ -35,23 +35,24 @@ class ModelLoader
       )
     end
 
-    # Load GPT-2 Japanese Generative Model
-    gpt_path = @models_path.join('gpt2_japanese', 'model.onnx')
-    puts "DEBUG: Checking GPT path: #{gpt_path} (Exists: #{File.exist?(gpt_path)})"
-    if File.exist?(gpt_path)
-      @gpt_session = OnnxRuntime::Model.new(gpt_path.to_s)
-      gpt_tokenizer_path = @models_path.join('gpt2_japanese', 'tokenizer.json')
-      puts "DEBUG: Checking GPT Tokenizer path: #{gpt_tokenizer_path} (Exists: #{File.exist?(gpt_tokenizer_path)})"
-      if File.exist?(gpt_tokenizer_path)
-        @gpt_tokenizer = Tokenizers::Tokenizer.from_file(gpt_tokenizer_path.to_s)
-      end
+    # Initialize Markov Chain
+    corpus_path = @models_path.join('fortunes_corpus.txt')
+    if File.exist?(corpus_path)
+      @markov_dictionary = MarkyMarkov::Dictionary.new("omikuji")
+      
+      # BERT Japanese models expect text to be pre-segmented by MeCab
+      # We do the same for Markov Chain training
+      corpus_text = File.read(corpus_path)
+      segmented_corpus = corpus_text.split("\n").map do |line|
+        @mecab.parse(line).split("\n").map { |l| l.split("\t").first }.join(" ")
+      end.join("\n")
+      
+      @markov_dictionary.parse_string(segmented_corpus)
     end
   end
 end
 
 # Pre-load models on boot in production/development
 Rails.application.config.after_initialize do
-  # We use a thread to not block the boot process if it takes too long, 
-  # but in production we want this ready.
-  Thread.new { ModelLoader.instance }
+  ModelLoader.instance
 end

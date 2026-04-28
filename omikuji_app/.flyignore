@@ -11,13 +11,8 @@
 /app/assets/builds/*
 /public/assets
 
-# Do NOT ignore model files
-!*.onnx
-!*.onnx.data
-!spiece.model
+# Do NOT ignore sentiment model files
+!model.onnx
+!model.onnx.data
 !vocab.txt
-!tokenizer.json
-!config.json
-!generation_config.json
-!special_tokens_map.json
-!tokenizer_config.json
+!fortunes_corpus.txt

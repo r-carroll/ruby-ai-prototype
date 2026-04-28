@@ -1,0 +1,922 @@
+  [1m[35mSQL (0.2ms)[0m  [1m[35mSET search_path TO public /*application='OmikujiApp'*/[0m
+  [1m[35m (245.2ms)[0m  [1m[35mCREATE DATABASE "omikuji_app_development" ENCODING = 'unicode' /*application='OmikujiApp'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO public /*application='OmikujiApp'*/[0m
+  [1m[35m (105.9ms)[0m  [1m[35mCREATE DATABASE "omikuji_app_test" ENCODING = 'unicode' /*application='OmikujiApp'*/[0m
+  [1m[35m (10.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY) /*application='OmikujiApp'*/[0m
+  [1m[35m (2.7ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL) /*application='OmikujiApp'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7679612323657180095) /*application='OmikujiApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (2.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='OmikujiApp'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (2.0ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-04-24 04:45:49.871549', '2026-04-24 04:45:49.871550') RETURNING "key" /*application='OmikujiApp'*/[0m
+Migrating to CreateFortunes (20260424044549)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*application='OmikujiApp'*/[0m
+  [1m[35m (8.2ms)[0m  [1m[35mCREATE TABLE "fortunes" ("id" bigserial primary key, "input_text" text, "sentiment_label" character varying, "fortune_text" text, "rank" character varying, "score" float, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL) /*application='OmikujiApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260424044549') RETURNING "version" /*application='OmikujiApp'*/[0m
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mCOMMIT /*application='OmikujiApp'*/[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(7679612323657180095) /*application='OmikujiApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mSET search_path TO public /*application='OmikujiApp'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO "$user", public /*application='OmikujiApp'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO public /*application='OmikujiApp'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[35mSET search_path TO "$user", public /*application='OmikujiApp'*/[0m
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:24:20 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (1.9ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:41
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 5.0ms | GC: 0.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 10.5ms | GC: 1.2ms)
+Completed 200 OK in 90ms (Views: 12.2ms | ActiveRecord: 22.3ms (1 query, 0 cached) | GC: 9.2ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:24:48 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございませいい天気ですね"}, "commit" => "Draw a Fortune (おみくじを引く)"}
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (4.4ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはようございませいい天気ですね', 'negative', '「運勢は末吉です。アドバイス:「あなたの運勢は、運勢がいいと感じているので、運勢はいい」', '末吉 (Suekichi)', 0.5910983085632324, '2026-04-24 05:24:50.532731', '2026-04-24 05:24:50.532731') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendering fortunes/show.html.erb
+  Rendered fortunes/show.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 2.0ms | GC: 0.2ms)
+Completed 200 OK in 1624ms (Views: 2.8ms | ActiveRecord: 4.8ms (1 query, 0 cached) | GC: 86.3ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:30:38 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (17.4ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:41
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 19.8ms | GC: 1.6ms)
+  Rendered layout layouts/application.html.erb (Duration: 25.0ms | GC: 5.5ms)
+Completed 200 OK in 33ms (Views: 1.9ms | ActiveRecord: 24.6ms (1 query, 0 cached) | GC: 8.1ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:30:54 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございますいい天気ですね"}, "commit" => "Draw a Fortune (おみくじを引く)"}
+Completed 500 Internal Server Error in 6ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.8ms)
+
+
+  
+NoMethodError (undefined method 'mecab' for an instance of ModelLoader):
+  
+app/services/sentiment_analysis_service.rb:21:in 'SentimentAnalysisService#predict'
+app/controllers/fortunes_controller.rb:14:in 'FortunesController#create'
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:31:13 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (1.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.9ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:41
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 4.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.8ms | GC: 0.0ms)
+Completed 200 OK in 41ms (Views: 9.5ms | ActiveRecord: 14.7ms (1 query, 0 cached) | GC: 0.3ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:31:26 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございますいい天気ですね"}, "commit" => "Draw a Fortune (おみくじを引く)"}
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (4.8ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはようございますいい天気ですね', 'positive', '「運勢は大吉です。アドバイス:「あなたの運勢は、運気が好調で、運気が好調な人が多いです」', '小吉 (Shokichi)', 0.11761164665222168, '2026-04-24 05:31:27.096904', '2026-04-24 05:31:27.096904') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendering fortunes/show.html.erb
+  Rendered fortunes/show.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 1.5ms | GC: 0.3ms)
+Completed 200 OK in 713ms (Views: 2.2ms | ActiveRecord: 5.5ms (1 query, 0 cached) | GC: 49.9ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:34:18 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.2ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:41
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 1.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.3ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 3.3ms | ActiveRecord: 2.7ms (1 query, 0 cached) | GC: 0.2ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:34:32 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございますいい天気ですね"}, "commit" => "Draw a Fortune (おみくじを引く)"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (1.5ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはようございますいい天気ですね', 'positive', '「吉兆の兆しあり。お告げ:「ove-one. 」', '小吉 (Shokichi)', 0.11761164665222168, '2026-04-24 05:34:33.129069', '2026-04-24 05:34:33.129069') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendering fortunes/show.html.erb
+  Rendered fortunes/show.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 1.0ms | GC: 0.0ms)
+Completed 200 OK in 538ms (Views: 2.3ms | ActiveRecord: 10.0ms (1 query, 0 cached) | GC: 47.1ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:36:22 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.9ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:41
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 5.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.1ms | GC: 0.0ms)
+Completed 200 OK in 40ms (Views: 9.9ms | ActiveRecord: 11.1ms (1 query, 0 cached) | GC: 0.3ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:36:26 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございますいい天気ですね"}, "commit" => "Draw a Fortune (おみくじを引く)"}
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (1.5ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはようございますいい天気ですね', 'positive', '「【神託】素晴らしい運気です。和歌のごとく、心穏やかに過ごせば幸運が舞い込みます。助言:「... 続きを読む → 神域の神様は皆さんにもおなじみの神でありますからね(笑)私はあなたのお守りを授けるために先祖代々いる霊感がありまし [」', '大吉 (Daikichi)', 0.11761164665222168, '2026-04-24 05:36:28.009933', '2026-04-24 05:36:28.009933') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (1.3ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendering fortunes/show.html.erb
+  Rendered fortunes/show.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 1.3ms | GC: 0.0ms)
+Completed 200 OK in 1784ms (Views: 1.7ms | ActiveRecord: 3.0ms (1 query, 0 cached) | GC: 135.9ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:37:15 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.8ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:41
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 4.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.2ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 5.3ms | ActiveRecord: 0.8ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:38:03 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.1ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:55
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 2.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 7.7ms | GC: 1.7ms)
+Completed 200 OK in 15ms (Views: 9.0ms | ActiveRecord: 1.7ms (1 query, 0 cached) | GC: 1.7ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:38:21 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (1.0ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:55
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 5.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.2ms | GC: 0.0ms)
+Completed 200 OK in 41ms (Views: 8.5ms | ActiveRecord: 15.8ms (1 query, 0 cached) | GC: 0.3ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:38:25 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.4ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:55
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 2.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.3ms | GC: 0.0ms)
+Completed 200 OK in 6ms (Views: 3.5ms | ActiveRecord: 0.4ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:40:40 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.3ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:55
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 2.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.8ms | GC: 0.0ms)
+Completed 200 OK in 39ms (Views: 8.1ms | ActiveRecord: 25.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:41:15 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございますいい天気ですね"}, "commit" => "おみくじを引く (Draw Fortune)"}
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (1.6ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはようございますいい天気ですね', 'positive', '「【神託】素晴らしい運気です。和歌のごとく、心穏やかに過ごせば幸運が舞い込みます。助言:「 」', '中吉 (Chukichi)', 0.11761164665222168, '2026-04-24 05:41:16.622776', '2026-04-24 05:41:16.622776') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendering fortunes/show.html.erb
+  Rendered fortunes/show.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 1.1ms | GC: 0.0ms)
+Completed 200 OK in 1490ms (Views: 1.5ms | ActiveRecord: 2.3ms (1 query, 0 cached) | GC: 50.6ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:47:21 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (43.2ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 53.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 59.2ms | GC: 0.0ms)
+Completed 200 OK in 67ms (Views: 8.4ms | ActiveRecord: 53.3ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:47:29 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => ""}, "commit" => "おみくじを引く (Draw Fortune)"}
+Redirected to http://127.0.0.1:3000/
+↳ app/controllers/fortunes_controller.rb:32:in 'FortunesController#create'
+Completed 302 Found in 4ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:47:29 +0900
+Processing by FortunesController#index as TURBO_STREAM
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.7ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 2.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.4ms | GC: 0.0ms)
+Completed 200 OK in 6ms (Views: 3.1ms | ActiveRecord: 0.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:47:50 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございますいい天気ですね"}, "commit" => "おみくじを引く (Draw Fortune)"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (5.2ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはようございますいい天気ですね', 'positive', '「♪ ☆ ☆ ■ 満開の空の下で水をかけてください(12月10日付け)※天候不順の場合は中止とさせていただきます」', '小吉 (Shokichi)', 0.11761164665222168, '2026-04-24 05:47:51.953249', '2026-04-24 05:47:51.953249') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (1.9ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendering fortunes/show.html.erb
+  Rendered fortunes/show.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 0.8ms | GC: 0.0ms)
+Completed 200 OK in 1379ms (Views: 1.2ms | ActiveRecord: 7.2ms (1 query, 0 cached) | GC: 90.2ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:48:33 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (1.1ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 9.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 10.8ms | GC: 0.0ms)
+Completed 200 OK in 16ms (Views: 10.8ms | ActiveRecord: 1.1ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:49:05 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (0.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.7ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 4.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.2ms | GC: 0.0ms)
+Completed 200 OK in 36ms (Views: 8.8ms | ActiveRecord: 11.3ms (1 query, 0 cached) | GC: 0.3ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:49:21 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございますいい天気ですね"}, "commit" => "おみくじを引く (Draw Fortune)"}
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (2.1ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはようございますいい天気ですね', 'positive', '「あなたは、あなたの人生をもっと楽しくするために努力していますか? [恋愛]:友人と過ごす時間が長くなったり、新しい人間関係を築いてくれる協力者が現れる可能性もあります」', '大吉 (Daikichi)', 0.11761164665222168, '2026-04-24 05:49:23.897410', '2026-04-24 05:49:23.897410') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendering fortunes/show.html.erb
+  Rendered fortunes/show.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 1.1ms | GC: 0.0ms)
+Completed 200 OK in 2739ms (Views: 1.5ms | ActiveRecord: 2.9ms (1 query, 0 cached) | GC: 125.3ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:51:36 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.7ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 4.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.6ms | GC: 0.0ms)
+Completed 200 OK in 40ms (Views: 9.4ms | ActiveRecord: 11.9ms (1 query, 0 cached) | GC: 0.4ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:51:53 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "古日は"}, "commit" => "おみくじを引く (Draw Fortune)"}
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (2.4ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('古日は', 'positive', '「あなたは今どんな状況なのか? 何をしたいのか・どうしたら良いか.../皆さんの悩みや不安な気持ちなど聞かせてください! 「」', '中吉 (Chukichi)', 0.0009616240859031677, '2026-04-24 05:51:55.088936', '2026-04-24 05:51:55.088936') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (1.4ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendered fortunes/_show.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 1819ms (Views: 1.7ms | ActiveRecord: 4.1ms (1 query, 0 cached) | GC: 133.6ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:54:01 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (1.4ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 5.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.0ms | GC: 0.0ms)
+Completed 200 OK in 13ms (Views: 5.5ms | ActiveRecord: 1.4ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:54:06 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "賛否両論ありますが、匂いが好きです。 いい匂いだね。と時々言ってもらえます。 4色くらい同メーカーの商品を試しましたが、最終的にこちらを毎回買っています。"}, "commit" => "おみくじを引く (Draw Fortune)"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (0.9ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('賛否両論ありますが、匂いが好きです。 いい匂いだね。と時々言ってもらえます。 4色くらい同メーカーの商品を試しましたが、最終的にこちらを毎回買っています。', 'positive', '「あなたの人生はとても美しいものになりました! 私の家の庭でも素敵な花を咲かせていますよ!!本当にありがとうございまし... 「自分の気持ち」', '小吉 (Shokichi)', 1.2281689643859863, '2026-04-24 05:54:08.056165', '2026-04-24 05:54:08.056165') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendered fortunes/_show.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 0.3ms | GC: 0.0ms)
+Completed 200 OK in 1355ms (Views: 0.5ms | ActiveRecord: 1.5ms (1 query, 0 cached) | GC: 51.9ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:55:39 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.2ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 3.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.6ms | GC: 0.0ms)
+Completed 200 OK in 16ms (Views: 5.8ms | ActiveRecord: 3.0ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:55:53 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.9ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 5.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 8.7ms | GC: 0.0ms)
+Completed 200 OK in 38ms (Views: 9.1ms | ActiveRecord: 11.7ms (1 query, 0 cached) | GC: 0.4ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:56:00 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "賛否両論ありますが、匂いが好きです。 いい匂いだね。と時々言ってもらえます。 4色くらい同メーカーの商品を試しましたが、最終的にこちらを毎回買っています。"}, "commit" => "おみくじを引く (Draw Fortune)"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (1.8ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('賛否両論ありますが、匂いが好きです。 いい匂いだね。と時々言ってもらえます。 4色くらい同メーカーの商品を試しましたが、最終的にこちらを毎回買っています。', 'positive', '「あなたは今どんな仕事に取り組んでいますか? 私は、Cのプログラマーでした!私の人生を歩んできた経験を活かしてきましたv」', '中吉 (Chukichi)', 0.8976759727507096, '2026-04-24 05:56:02.035086', '2026-04-24 05:56:02.035086') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendered fortunes/_show.html.erb (Duration: 0.2ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 1.1ms | GC: 0.0ms)
+Completed 200 OK in 1814ms (Views: 1.5ms | ActiveRecord: 2.4ms (1 query, 0 cached) | GC: 139.4ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 14:56:42 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.6ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 2.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.9ms | GC: 0.0ms)
+Completed 200 OK in 4ms (Views: 2.6ms | ActiveRecord: 0.6ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 14:56:55 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございますいい天気"}, "commit" => "おみくじを引く (Draw Fortune)"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (0.7ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはようございますいい天気', 'positive', '「あなたの心の中はどこにあるでしょうか? ___人.jp/eadstopics [続きを読む] 「天からのメッセージ」', '小吉 (Shokichi)', 0.7802102020962629, '2026-04-24 05:56:56.255783', '2026-04-24 05:56:56.255783') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendered fortunes/_show.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 0.2ms | GC: 0.0ms)
+Completed 200 OK in 1119ms (Views: 0.4ms | ActiveRecord: 1.9ms (1 query, 0 cached) | GC: 40.5ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:05:23 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (1.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.8ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 7.5ms | GC: 0.4ms)
+  Rendered layout layouts/application.html.erb (Duration: 11.7ms | GC: 1.0ms)
+Completed 200 OK in 65ms (Views: 14.0ms | ActiveRecord: 13.6ms (1 query, 0 cached) | GC: 3.9ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 15:05:31 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => ""}, "commit" => "おみくじを引く (Draw Fortune)"}
+Redirected to http://127.0.0.1:3000/
+↳ app/controllers/fortunes_controller.rb:32:in 'FortunesController#create'
+Completed 302 Found in 6ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 3.5ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:05:31 +0900
+Processing by FortunesController#index as TURBO_STREAM
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.8ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 5.0ms | GC: 2.2ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.0ms | GC: 2.7ms)
+Completed 200 OK in 10ms (Views: 6.3ms | ActiveRecord: 0.8ms (1 query, 0 cached) | GC: 4.8ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 15:05:33 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございますいい天気"}, "commit" => "おみくじを引く (Draw Fortune)"}
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (4.2ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはようございますいい天気', 'positive', '「あなたの願いを叶えてくれる人が現れてきます 勇気を持って行動すれば大きな成功をもたらしてくれそうだ!と感じる人は多いと思いますが、それは自分だけが感じているのではなく周りにも言」', '大吉 (Daikichi)', 0.7802102020962629, '2026-04-24 06:05:36.680007', '2026-04-24 06:05:36.680007') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendered fortunes/_show.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 1.7ms | GC: 0.0ms)
+Completed 200 OK in 2746ms (Views: 2.1ms | ActiveRecord: 5.0ms (1 query, 0 cached) | GC: 158.3ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:07:31 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.2ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 2.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 7.1ms | GC: 0.0ms)
+Completed 200 OK in 27ms (Views: 8.8ms | ActiveRecord: 13.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/fortunes/10" for 127.0.0.1 at 2026-04-24 15:07:33 +0900
+Processing by FortunesController#show as HTML
+  Parameters: {"id" => "10"}
+  [1m[36mFortune Load (1.0ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" WHERE "fortunes"."id" = 10 LIMIT 1 /*action='show',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:37:in 'FortunesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/show.html.erb within layouts/application
+  Rendered fortunes/_show.html.erb (Duration: 1.2ms | GC: 0.0ms)
+  Rendered fortunes/show.html.erb within layouts/application (Duration: 2.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.6ms | GC: 0.0ms)
+Completed 200 OK in 17ms (Views: 4.5ms | ActiveRecord: 1.0ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:07:36 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.6ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:57
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 5.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.5ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 6.7ms | ActiveRecord: 0.6ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 15:07:59 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "古日はどうぞ"}, "commit" => "おみくじを引く (Draw Fortune)"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (1.9ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('古日はどうぞ', 'negative', '「自然に笑えるようになる 自分が嫌いなのではなくて、自分に自信がないからかもしれませんね!/ それでいいんだよ?って言われると嬉しいけど」', '凶 (Kyo)', 0.5214019204070962, '2026-04-24 06:08:01.631919', '2026-04-24 06:08:01.631919') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendered fortunes/_show.html.erb (Duration: 0.1ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 0.4ms | GC: 0.0ms)
+Completed 200 OK in 1694ms (Views: 0.8ms | ActiveRecord: 2.2ms (1 query, 0 cached) | GC: 84.4ms)
+
+
+Started GET "/fortunes/13" for 127.0.0.1 at 2026-04-24 15:08:11 +0900
+Processing by FortunesController#show as HTML
+  Parameters: {"id" => "13"}
+  [1m[36mFortune Load (0.3ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" WHERE "fortunes"."id" = 13 LIMIT 1 /*action='show',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:37:in 'FortunesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/show.html.erb within layouts/application
+  Rendered fortunes/_show.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered fortunes/show.html.erb within layouts/application (Duration: 0.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.4ms | GC: 0.0ms)
+Completed 200 OK in 4ms (Views: 1.9ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:10:50 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.4ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:61
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 5.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 11.8ms | GC: 0.0ms)
+Completed 200 OK in 26ms (Views: 16.0ms | ActiveRecord: 3.1ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:11:11 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.6ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:61
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 5.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 10.5ms | GC: 0.0ms)
+Completed 200 OK in 39ms (Views: 11.4ms | ActiveRecord: 6.6ms (1 query, 0 cached) | GC: 0.4ms)
+
+
+Started GET "/fortunes/13" for 127.0.0.1 at 2026-04-24 15:11:20 +0900
+Processing by FortunesController#show as HTML
+  Parameters: {"id" => "13"}
+  [1m[36mFortune Load (0.8ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" WHERE "fortunes"."id" = 13 LIMIT 1 /*action='show',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:37:in 'FortunesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/show.html.erb within layouts/application
+  Rendered fortunes/_show.html.erb (Duration: 1.0ms | GC: 0.0ms)
+  Rendered fortunes/show.html.erb within layouts/application (Duration: 2.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.8ms | GC: 0.0ms)
+Completed 200 OK in 13ms (Views: 4.6ms | ActiveRecord: 0.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:11:25 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.6ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:61
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 4.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.6ms | GC: 0.0ms)
+Completed 200 OK in 8ms (Views: 5.8ms | ActiveRecord: 0.6ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/architecture" for 127.0.0.1 at 2026-04-24 15:11:39 +0900
+Processing by PagesController#architecture as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/architecture.html.erb within layouts/application
+  Rendered pages/architecture.html.erb within layouts/application (Duration: 0.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.1ms | GC: 0.0ms)
+Completed 200 OK in 5ms (Views: 3.2ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/architecture" for 127.0.0.1 at 2026-04-24 15:11:39 +0900
+Processing by PagesController#architecture as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/architecture.html.erb within layouts/application
+  Rendered pages/architecture.html.erb within layouts/application (Duration: 1.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.8ms | GC: 0.0ms)
+Completed 200 OK in 5ms (Views: 3.5ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/fortunes/13" for 127.0.0.1 at 2026-04-24 15:11:47 +0900
+Processing by FortunesController#show as HTML
+  Parameters: {"id" => "13"}
+  [1m[36mFortune Load (0.6ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" WHERE "fortunes"."id" = 13 LIMIT 1 /*action='show',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:37:in 'FortunesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/show.html.erb within layouts/application
+  Rendered fortunes/_show.html.erb (Duration: 0.5ms | GC: 0.0ms)
+  Rendered fortunes/show.html.erb within layouts/application (Duration: 0.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.3ms | GC: 0.0ms)
+Completed 200 OK in 7ms (Views: 3.0ms | ActiveRecord: 0.6ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:12:53 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.2ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:61
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 2.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.1ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 4.8ms | ActiveRecord: 1.6ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/architecture" for 127.0.0.1 at 2026-04-24 15:12:59 +0900
+Processing by PagesController#architecture as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/architecture.html.erb within layouts/application
+  Rendered pages/architecture.html.erb within layouts/application (Duration: 0.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.3ms | GC: 0.0ms)
+Completed 200 OK in 6ms (Views: 3.6ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:15:45 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.3ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:81
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 2.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 7.5ms | GC: 0.0ms)
+Completed 200 OK in 15ms (Views: 8.7ms | ActiveRecord: 2.4ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/architecture" for 127.0.0.1 at 2026-04-24 15:15:51 +0900
+Processing by PagesController#architecture as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/architecture.html.erb within layouts/application
+  Rendered pages/architecture.html.erb within layouts/application (Duration: 0.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.0ms | GC: 0.0ms)
+Completed 200 OK in 5ms (Views: 3.0ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 15:16:16 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはようございませういい天気"}, "commit" => "おみくじを引く (Draw Destiny)"}
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (2.0ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはようございませういい天気', 'positive', '「恋愛において必要なことは全てやっておくことが重要 ・相手との関係性も良好であることが必要 おすすめの本...続きを読む 神託とは何か?と問われれば「信」', '小吉 (Shokichi)', 0.6566767648367171, '2026-04-24 06:16:19.756798', '2026-04-24 06:16:19.756798') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (1.7ms)[0m  [1m[35mCOMMIT /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendered fortunes/_show.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 1.4ms | GC: 0.0ms)
+Completed 200 OK in 3319ms (Views: 1.8ms | ActiveRecord: 3.9ms (1 query, 0 cached) | GC: 165.4ms)
+
+
+Started GET "/architecture" for 127.0.0.1 at 2026-04-24 15:17:28 +0900
+Processing by PagesController#architecture as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/architecture.html.erb within layouts/application
+  Rendered pages/architecture.html.erb within layouts/application (Duration: 1.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.2ms | GC: 0.0ms)
+Completed 200 OK in 10ms (Views: 6.1ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:18:06 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (1.2ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:81
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 8.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.0ms | GC: 0.0ms)
+Completed 200 OK in 15ms (Views: 9.9ms | ActiveRecord: 1.2ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:18:06 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.5ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:81
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 4.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.5ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 5.7ms | ActiveRecord: 0.5ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/architecture" for 127.0.0.1 at 2026-04-24 15:18:45 +0900
+Processing by PagesController#architecture as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/architecture.html.erb within layouts/application
+  Rendered pages/architecture.html.erb within layouts/application (Duration: 0.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.1ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.4ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:20:05 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.2ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:81
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 2.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.6ms | GC: 0.0ms)
+Completed 200 OK in 26ms (Views: 4.8ms | ActiveRecord: 15.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/fortunes/13" for 127.0.0.1 at 2026-04-24 15:20:16 +0900
+Processing by FortunesController#show as HTML
+  Parameters: {"id" => "13"}
+  [1m[36mFortune Load (0.6ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" WHERE "fortunes"."id" = 13 LIMIT 1 /*action='show',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:37:in 'FortunesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/show.html.erb within layouts/application
+  Rendered fortunes/_show.html.erb (Duration: 1.5ms | GC: 0.0ms)
+  Rendered fortunes/show.html.erb within layouts/application (Duration: 3.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.4ms | GC: 0.0ms)
+Completed 200 OK in 12ms (Views: 5.1ms | ActiveRecord: 0.6ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/architecture" for 127.0.0.1 at 2026-04-24 15:20:19 +0900
+Processing by PagesController#architecture as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering pages/architecture.html.erb within layouts/application
+  Rendered pages/architecture.html.erb within layouts/application (Duration: 1.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.2ms | GC: 0.0ms)
+Completed 200 OK in 8ms (Views: 5.2ms | ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:20:27 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.4ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:81
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 4.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 9.3ms | GC: 0.0ms)
+Completed 200 OK in 19ms (Views: 10.8ms | ActiveRecord: 2.9ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:20:28 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.6ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:81
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 4.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.0ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 6.3ms | ActiveRecord: 0.6ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 15:21:09 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.3ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:81
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 3.1ms | GC: 0.7ms)
+  Rendered layout layouts/application.html.erb (Duration: 5.0ms | GC: 1.2ms)
+Completed 200 OK in 14ms (Views: 6.2ms | ActiveRecord: 3.3ms (1 query, 0 cached) | GC: 1.7ms)
+
+
+Started GET "/fortunes/5" for 127.0.0.1 at 2026-04-24 15:21:13 +0900
+Processing by FortunesController#show as HTML
+  Parameters: {"id" => "5"}
+  [1m[36mFortune Load (0.5ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" WHERE "fortunes"."id" = 5 LIMIT 1 /*action='show',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:37:in 'FortunesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/show.html.erb within layouts/application
+  Rendered fortunes/_show.html.erb (Duration: 1.3ms | GC: 0.0ms)
+  Rendered fortunes/show.html.erb within layouts/application (Duration: 2.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.9ms | GC: 0.0ms)
+Completed 200 OK in 12ms (Views: 4.6ms | ActiveRecord: 0.5ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/fortunes/9" for 127.0.0.1 at 2026-04-24 15:21:17 +0900
+Processing by FortunesController#show as HTML
+  Parameters: {"id" => "9"}
+  [1m[36mFortune Load (0.7ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" WHERE "fortunes"."id" = 9 LIMIT 1 /*action='show',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:37:in 'FortunesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/show.html.erb within layouts/application
+  Rendered fortunes/_show.html.erb (Duration: 0.6ms | GC: 0.0ms)
+  Rendered fortunes/show.html.erb within layouts/application (Duration: 1.0ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.4ms | GC: 0.0ms)
+Completed 200 OK in 9ms (Views: 3.6ms | ActiveRecord: 0.7ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started GET "/fortunes/11" for 127.0.0.1 at 2026-04-24 15:21:17 +0900
+Processing by FortunesController#show as HTML
+  Parameters: {"id" => "11"}
+  [1m[36mFortune Load (0.5ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" WHERE "fortunes"."id" = 11 LIMIT 1 /*action='show',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:37:in 'FortunesController#show'
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/show.html.erb within layouts/application
+  Rendered fortunes/_show.html.erb (Duration: 0.4ms | GC: 0.0ms)
+  Rendered fortunes/show.html.erb within layouts/application (Duration: 0.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.8ms | GC: 0.0ms)
+Completed 200 OK in 5ms (Views: 2.4ms | ActiveRecord: 0.5ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 17:12:06 +0900
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='OmikujiApp'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='OmikujiApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+  
+ActiveRecord::PendingMigrationError (
+
+Migrations are pending. To resolve this issue, run:
+
+        bin/rails db:migrate
+
+You have 1 pending migration:
+
+db/migrate/20260424044549_create_fortunes.rb
+
+
+):
+  
+activerecord (8.1.3) lib/active_record/migration.rb:743:in 'ActiveRecord::Migration.check_pending_migrations'
+activerecord (8.1.3) lib/active_record/migration.rb:660:in 'block (2 levels) in ActiveRecord::Migration::CheckPending#call'
+activesupport (8.1.3) lib/active_support/file_update_checker.rb:88:in 'ActiveSupport::FileUpdateChecker#execute'
+activerecord (8.1.3) lib/active_record/migration.rb:665:in 'block in ActiveRecord::Migration::CheckPending#call'
+activerecord (8.1.3) lib/active_record/migration.rb:657:in 'Thread::Mutex#synchronize'
+activerecord (8.1.3) lib/active_record/migration.rb:657:in 'ActiveRecord::Migration::CheckPending#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/callbacks.rb:31:in 'block in ActionDispatch::Callbacks#call'
+activesupport (8.1.3) lib/active_support/callbacks.rb:101:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (8.1.3) lib/action_dispatch/middleware/callbacks.rb:30:in 'ActionDispatch::Callbacks#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/executor.rb:20:in 'ActionDispatch::Executor#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in 'ActionDispatch::ActionableExceptions#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/debug_exceptions.rb:31:in 'ActionDispatch::DebugExceptions#call'
+web-console (4.3.0) lib/web_console/middleware.rb:132:in 'WebConsole::Middleware#call_app'
+web-console (4.3.0) lib/web_console/middleware.rb:28:in 'block in WebConsole::Middleware#call'
+web-console (4.3.0) lib/web_console/middleware.rb:17:in 'Kernel#catch'
+web-console (4.3.0) lib/web_console/middleware.rb:17:in 'WebConsole::Middleware#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/show_exceptions.rb:32:in 'ActionDispatch::ShowExceptions#call'
+railties (8.1.3) lib/rails/rack/logger.rb:41:in 'Rails::Rack::Logger#call_app'
+railties (8.1.3) lib/rails/rack/logger.rb:29:in 'Rails::Rack::Logger#call'
+propshaft (1.3.2) lib/propshaft/quiet_assets.rb:11:in 'Propshaft::QuietAssets#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/remote_ip.rb:98:in 'ActionDispatch::RemoteIp#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/request_id.rb:34:in 'ActionDispatch::RequestId#call'
+rack (3.2.6) lib/rack/method_override.rb:28:in 'Rack::MethodOverride#call'
+rack (3.2.6) lib/rack/runtime.rb:24:in 'Rack::Runtime#call'
+activesupport (8.1.3) lib/active_support/cache/strategy/local_cache_middleware.rb:30:in 'ActiveSupport::Cache::Strategy::LocalCache::Middleware#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/server_timing.rb:61:in 'block in ActionDispatch::ServerTiming#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/server_timing.rb:26:in 'ActionDispatch::ServerTiming::Subscriber#collect_events'
+actionpack (8.1.3) lib/action_dispatch/middleware/server_timing.rb:60:in 'ActionDispatch::ServerTiming#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/executor.rb:20:in 'ActionDispatch::Executor#call'
+propshaft (1.3.2) lib/propshaft/server.rb:37:in 'Propshaft::Server#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/static.rb:27:in 'ActionDispatch::Static#call'
+rack (3.2.6) lib/rack/sendfile.rb:131:in 'Rack::Sendfile#call'
+actionpack (8.1.3) lib/action_dispatch/middleware/host_authorization.rb:143:in 'ActionDispatch::HostAuthorization#call'
+railties (8.1.3) lib/rails/engine.rb:534:in 'Rails::Engine#call'
+puma (8.0.0) lib/puma/configuration.rb:305:in 'Puma::Configuration::ConfigMiddleware#call'
+puma (8.0.0) lib/puma/response.rb:79:in 'block in Puma::Response#handle_request'
+puma (8.0.0) lib/puma/thread_pool.rb:434:in 'Puma::ThreadPool#with_force_shutdown'
+puma (8.0.0) lib/puma/response.rb:78:in 'Puma::Response#handle_request'
+puma (8.0.0) lib/puma/server.rb:508:in 'Puma::Server#process_client'
+puma (8.0.0) lib/puma/server.rb:263:in 'block in Puma::Server#run'
+puma (8.0.0) lib/puma/thread_pool.rb:246:in 'block in Puma::ThreadPool#spawn_thread'
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='OmikujiApp'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-04-24 08:12:18.994326', '2026-04-24 08:12:18.994327') RETURNING "key" /*application='OmikujiApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Migrating to CreateFortunes (20260424044549)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='OmikujiApp'*/[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "fortunes" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "input_text" text, "sentiment_label" varchar, "fortune_text" text, "rank" varchar, "score" float, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='OmikujiApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260424044549') RETURNING "version" /*application='OmikujiApp'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='OmikujiApp'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Started GET "/" for 127.0.0.1 at 2026-04-24 17:12:24 +0900
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='OmikujiApp'*/[0m
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.1ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:81
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 3.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 7.4ms | GC: 0.0ms)
+Completed 200 OK in 20ms (Views: 8.3ms | ActiveRecord: 0.8ms (1 query, 0 cached) | GC: 0.0ms)
+
+
+Started POST "/fortunes" for 127.0.0.1 at 2026-04-24 17:12:38 +0900
+Processing by FortunesController#create as TURBO_STREAM
+  Parameters: {"authenticity_token" => "[FILTERED]", "fortune" => {"input_text" => "おはよう"}, "commit" => "おみくじを引く (Draw Destiny)"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mFortune Create (0.5ms)[0m  [1m[32mINSERT INTO "fortunes" ("input_text", "sentiment_label", "fortune_text", "rank", "score", "created_at", "updated_at") VALUES ('おはよう', 'positive', '「私自身がこの仕事を始めて10年になりました」', '中吉 (Chukichi)', 0.7008234894035024, '2026-04-24 08:12:40.168587', '2026-04-24 08:12:40.168587') RETURNING "id" /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mCOMMIT TRANSACTION /*action='create',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/controllers/fortunes_controller.rb:23:in 'FortunesController#create'
+  Rendering fortunes/create.turbo_stream.erb
+  Rendered fortunes/_show.html.erb (Duration: 0.3ms | GC: 0.0ms)
+  Rendered fortunes/create.turbo_stream.erb (Duration: 1.1ms | GC: 0.0ms)
+Completed 200 OK in 1859ms (Views: 1.6ms | ActiveRecord: 0.8ms (1 query, 0 cached) | GC: 57.8ms)
+
+
+Started GET "/" for 127.0.0.1 at 2026-04-24 17:12:47 +0900
+Processing by FortunesController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering fortunes/index.html.erb within layouts/application
+  [1m[36mFortune Load (0.3ms)[0m  [1m[34mSELECT "fortunes".* FROM "fortunes" ORDER BY "fortunes"."created_at" DESC LIMIT 10 /*action='index',application='OmikujiApp',controller='fortunes'*/[0m
+  ↳ app/views/fortunes/index.html.erb:81
+  Rendered fortunes/index.html.erb within layouts/application (Duration: 3.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 4.8ms | GC: 0.1ms)
+Completed 200 OK in 9ms (Views: 5.3ms | ActiveRecord: 0.3ms (1 query, 0 cached) | GC: 0.1ms)
+
+
