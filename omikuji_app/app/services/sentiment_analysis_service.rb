@@ -16,6 +16,10 @@ class SentimentAnalysisService
 
   def predict
     unless @bert_session && @tokenizer
+      Rails.logger.error "Sentiment Analysis Fallback: Model or Tokenizer not loaded."
+      Rails.logger.error "BERT Session: #{@bert_session.nil? ? 'Missing' : 'Loaded'}"
+      Rails.logger.error "Tokenizer: #{@tokenizer.nil? ? 'Missing' : 'Loaded'}"
+      
       return {
         label: :neutral,
         score: 0.5,
