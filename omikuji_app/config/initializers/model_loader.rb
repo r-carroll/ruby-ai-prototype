@@ -3,20 +3,11 @@
 require 'onnxruntime'
 require 'tokenizers'
 require 'natto'
-require 'marky_markov'
-
-# Monkeypatch for marky_markov compatibility with Ruby 3.2+
-# The gem uses File.exists? which was removed in Ruby 3.2.
-unless File.respond_to?(:exists?)
-  def File.exists?(path)
-    exist?(path)
-  end
-end
 
 class ModelLoader
   include Singleton
 
-  attr_reader :bert_session, :bert_tokenizer, :mecab, :markov_dictionary
+  attr_reader :bert_session, :bert_tokenizer, :mecab, :markov_service
 
   def initialize
     @models_path = Rails.root.join('vendor', 'models')
@@ -44,25 +35,23 @@ class ModelLoader
       )
     end
 
-    # Initialize Markov Chain
+    # Initialize Custom Markov Service
     corpus_path = @models_path.join('fortunes_corpus.txt')
     if File.exist?(corpus_path)
-      # Use TemporaryDictionary so we don't create .mmd files on disk
-      @markov_dictionary = MarkyMarkov::TemporaryDictionary.new
+      corpus_text = File.read(corpus_path)
       
       # BERT Japanese models expect text to be pre-segmented by MeCab
       # We do the same for Markov Chain training
-      corpus_text = File.read(corpus_path)
       segmented_corpus = corpus_text.split("\n").map do |line|
         @mecab.parse(line).split("\n").map { |l| l.split("\t").first }.join(" ")
       end.join("\n")
       
-      @markov_dictionary.parse_string(segmented_corpus)
+      @markov_service = MarkovService.new(segmented_corpus)
     end
   end
 end
 
-# Pre-load models on boot in production/development
+# Pre-load models on boot
 Rails.application.config.after_initialize do
   ModelLoader.instance
 end

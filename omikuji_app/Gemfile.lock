@@ -169,8 +169,6 @@ GEM
       net-pop
       net-smtp
     marcel (1.1.0)
-    marky_markov (0.3.5)
-      msgpack
     matrix (0.4.3)
     mini_magick (5.3.1)
       logger
@@ -453,7 +451,6 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
-  marky_markov
   natto (~> 1.2)
   onnxruntime (~> 0.11.2)
   pg (~> 1.1)

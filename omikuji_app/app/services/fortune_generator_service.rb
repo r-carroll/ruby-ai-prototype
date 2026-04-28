@@ -16,11 +16,11 @@ class FortuneGeneratorService
   def initialize(sentiment_label)
     @sentiment = (sentiment_label || :neutral).to_sym
     @loader = ModelLoader.instance
-    @dictionary = @loader.markov_dictionary
+    @markov_service = @loader.markov_service
   end
 
   def generate
-    unless @dictionary
+    unless @markov_service
       return {
         rank: "平 (Heira)",
         fortune: "「おみくじは現在準備中です」"
@@ -30,8 +30,8 @@ class FortuneGeneratorService
     rank = (RANKS[@sentiment] || RANKS[:neutral]).sample
     prefix = PROMPTS[@sentiment] || PROMPTS[:neutral]
     
-    # Generate 1-2 sentences
-    generated = @dictionary.generate_n_sentences(rand(1..2))
+    # Generate a unique sentence using our custom service
+    generated = @markov_service.generate_sentence
     
     # Clean up MeCab spaces
     clean_fortune = generated.gsub(" ", "")
