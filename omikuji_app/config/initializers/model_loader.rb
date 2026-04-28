@@ -47,7 +47,8 @@ class ModelLoader
     # Initialize Markov Chain
     corpus_path = @models_path.join('fortunes_corpus.txt')
     if File.exist?(corpus_path)
-      @markov_dictionary = MarkyMarkov::Dictionary.new("omikuji")
+      # Use TemporaryDictionary so we don't create .mmd files on disk
+      @markov_dictionary = MarkyMarkov::TemporaryDictionary.new
       
       # BERT Japanese models expect text to be pre-segmented by MeCab
       # We do the same for Markov Chain training
