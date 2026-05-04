@@ -51,7 +51,15 @@ class ModelLoader
   end
 end
 
-# Pre-load models on boot
+# Pre-load models on boot in a background thread to prevent blocking Rails boot.
+# This allows the server to start and pass health checks immediately.
 Rails.application.config.after_initialize do
-  ModelLoader.instance
+  Thread.new do
+    begin
+      ModelLoader.instance
+      Rails.logger.info "ModelLoader: Background initialization complete."
+    rescue => e
+      Rails.logger.error "ModelLoader: Background initialization failed: #{e.message}"
+    end
+  end
 end
