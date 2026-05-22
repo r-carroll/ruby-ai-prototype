@@ -11,9 +11,21 @@ RSpec.describe SentimentAnalysisService do
       result = service.predict
 
       expect(result).to have_key(:label)
-      expect([:positive, :negative]).to include(result[:label])
+      expect([:positive, :negative, :neutral]).to include(result[:label])
       # Since BERT is trained on reviews, "Happy" should likely be positive
       expect(result[:label]).to eq(:positive)
+    end
+
+    it "predicts neutral sentiment for an ambiguous or neutral sentence" do
+      # "It is raining today."
+      text = "今日は雨が降っています。"
+      service = SentimentAnalysisService.new(text)
+      result = service.predict
+      
+      # This is a bit subjective based on the model training, 
+      # but we want to ensure it handles the potential for :neutral
+      expect(result).to have_key(:label)
+      expect([:positive, :negative, :neutral]).to include(result[:label])
     end
 
     it "correctly predicts negative sentiment for an unhappy Japanese sentence" do

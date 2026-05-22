@@ -10,11 +10,14 @@ class SentimentAnalysisService
   def initialize(text)
     @text = text
     @loader = ModelLoader.instance
-    @tokenizer = @loader.bert_tokenizer
-    @bert_session = @loader.bert_session
   end
 
   def predict
+    # Accessing bert_tokenizer and bert_session here will trigger the lazy load
+    # if it hasn't happened yet in the background.
+    @tokenizer = @loader.bert_tokenizer
+    @bert_session = @loader.bert_session
+
     unless @bert_session && @tokenizer
       Rails.logger.error "Sentiment Analysis Fallback: Model or Tokenizer not loaded."
       Rails.logger.error "BERT Session: #{@bert_session.nil? ? 'Missing' : 'Loaded'}"
@@ -63,8 +66,15 @@ class SentimentAnalysisService
     # Higher probability wins
     prediction_idx = probabilities.index(probabilities.max)
     
+    # If the difference between probabilities is small, consider it neutral
+    label = if (probabilities[0] - probabilities[1]).abs < 0.2
+              :neutral
+            else
+              LABELS[prediction_idx]
+            end
+    
     {
-      label: LABELS[prediction_idx],
+      label: label,
       score: probabilities[prediction_idx], # This will now be between 0.0 and 1.0
       all_scores: probabilities,
       text: @text

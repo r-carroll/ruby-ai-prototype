@@ -1,7 +1,8 @@
 <!-- omikuji_app/app/views/fortunes/_show.html.erb -->
 <% fortune ||= @fortune %>
 
-<div class="max-w-md mx-auto my-8 md:my-12 bg-white shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] rounded-2xl p-6 md:p-10 font-serif relative overflow-hidden animate-slide-up border border-stone-100">
+<%= turbo_stream_from fortune %>
+<div id="fortune_<%= fortune.id %>" class="max-w-md mx-auto my-8 md:my-12 bg-white shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] rounded-2xl p-6 md:p-10 font-serif relative overflow-hidden animate-slide-up border border-stone-100">
   <!-- Subtle Header -->
   <div class="flex justify-between items-start mb-8 md:mb-12 border-b border-stone-100 pb-6 md:pb-8">
     <div class="text-left">
@@ -14,44 +15,64 @@
     </div>
   </div>
 
-  <!-- Rank (The Big Blessing) -->
+  <!-- Rank (The Big Blessing) or Loading -->
   <div class="text-center mb-10 md:mb-16 relative py-8 md:py-12 bg-stone-50/50 rounded-xl border border-white">
-    <span class="text-6xl md:text-8xl font-black text-red-700 tracking-tighter drop-shadow-xl block">
-      <%= fortune.rank.split(' ').first %>
-    </span>
-    <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white px-4 py-1 rounded-full border border-stone-100 shadow-sm">
-      <p class="text-[9px] md:text-[10px] text-stone-500 font-black tracking-[0.3em] uppercase whitespace-nowrap">
-        <%= fortune.rank.split(' ').last %>
-      </p>
-    </div>
+    <% if fortune.status == "pending" %>
+      <div class="flex flex-col items-center justify-center space-y-6 py-4">
+        <div class="text-5xl md:text-7xl animate-float">⛩️</div>
+        <div class="flex flex-col items-center">
+          <div class="w-12 h-1 bg-red-800 animate-pulse mb-4"></div>
+          <p class="text-stone-800 font-serif text-lg md:text-xl tracking-widest uppercase font-black">神託を待つ...</p>
+          <p class="text-stone-400 text-[10px] mt-2 italic tracking-widest">Awaiting the Divine Oracle</p>
+        </div>
+      </div>
+    <% else %>
+      <span class="text-6xl md:text-8xl font-black text-red-700 tracking-tighter drop-shadow-xl block">
+        <%= fortune.rank.split(' ').first %>
+      </span>
+      <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white px-4 py-1 rounded-full border border-stone-100 shadow-sm">
+        <p class="text-[9px] md:text-[10px] text-stone-500 font-black tracking-[0.3em] uppercase whitespace-nowrap">
+          <%= fortune.rank.split(' ').last %>
+        </p>
+      </div>
+    <% end %>
   </div>
 
   <!-- Sentiment Analysis Detail -->
-  <div class="mb-10 md:mb-16">
-    <div class="flex items-center space-x-3 mb-4">
-      <div class="w-2 h-2 rounded-full <%= fortune.sentiment_label == 'positive' ? 'bg-green-500' : 'bg-amber-500' %>"></div>
-      <h3 class="text-[10px] font-black text-stone-400 uppercase tracking-widest"><%= fortune.sentiment_label %> Sentiment Detected</h3>
-    </div>
-    <p class="text-xl md:text-2xl text-stone-800 leading-tight italic font-medium mb-6 break-words">"<%= fortune.input_text %>"</p>
-    <div class="flex items-center space-x-3">
-      <div class="h-1 flex-grow bg-stone-100 rounded-full overflow-hidden">
-        <div class="h-full <%= fortune.sentiment_label == 'positive' ? 'bg-green-600' : 'bg-amber-600' %> transition-all duration-1000" 
-             style="width: <%= [(fortune.score.abs * 100).to_i, 100].min %>%"></div>
+  <% if fortune.status != "pending" %>
+    <div class="mb-10 md:mb-16">
+      <div class="flex items-center space-x-3 mb-4">
+        <div class="w-2 h-2 rounded-full <%= case fortune.sentiment_label; when 'positive'; 'bg-green-500'; when 'neutral'; 'bg-stone-400'; else; 'bg-amber-500'; end %>"></div>
+        <h3 class="text-[10px] font-black text-stone-400 uppercase tracking-widest"><%= fortune.sentiment_label %> Sentiment Detected</h3>
       </div>
-      <span class="text-[10px] font-black text-stone-500 tracking-tighter">
-        <%= (fortune.score.abs * 100).round(1) %>%
-      </span>
+      <p class="text-xl md:text-2xl text-stone-800 leading-tight italic font-medium mb-6 break-words">"<%= fortune.input_text %>"</p>
+      <div class="flex items-center space-x-3">
+        <div class="h-1 flex-grow bg-stone-100 rounded-full overflow-hidden">
+          <div class="h-full <%= case fortune.sentiment_label; when 'positive'; 'bg-green-600'; when 'neutral'; 'bg-stone-500'; else; 'bg-amber-600'; end %> transition-all duration-1000" 
+               style="width: <%= [(fortune.score.abs * 100).to_i, 100].min %>%"></div>
+        </div>
+        <span class="text-[10px] font-black text-stone-500 tracking-tighter">
+          <%= (fortune.score.abs * 100).round(1) %>%
+        </span>
+      </div>
     </div>
-  </div>
+  <% else %>
+    <div class="mb-10 md:mb-16 opacity-50">
+      <h3 class="text-[10px] font-black text-stone-400 uppercase tracking-widest mb-4">Analyzing Spiritual Echo...</h3>
+      <p class="text-xl md:text-2xl text-stone-400 leading-tight italic font-medium mb-6 break-words">"<%= fortune.input_text %>"</p>
+    </div>
+  <% end %>
 
   <!-- The Fortune Text (GPT-2 Output) -->
-  <div class="mb-10 md:mb-16 text-center px-2 md:px-6 relative">
-    <div class="w-12 h-[1px] bg-stone-200 mx-auto mb-6 md:mb-8"></div>
-    <p class="text-2xl md:text-3xl leading-[1.4] text-stone-900 font-medium tracking-tight break-words">
-      <%= fortune.fortune_text.gsub(/[「」]/, '') %>
-    </p>
-    <div class="w-12 h-[1px] bg-stone-200 mx-auto mt-6 md:mt-8"></div>
-  </div>
+  <% if fortune.status != "pending" %>
+    <div class="mb-10 md:mb-16 text-center px-2 md:px-6 relative">
+      <div class="w-12 h-[1px] bg-stone-200 mx-auto mb-6 md:mb-8"></div>
+      <p class="text-2xl md:text-3xl leading-[1.4] text-stone-900 font-medium tracking-tight break-words">
+        <%= fortune.fortune_text.gsub(/[「」]/, '') %>
+      </p>
+      <div class="w-12 h-[1px] bg-stone-200 mx-auto mt-6 md:mt-8"></div>
+    </div>
+  <% end %>
 
   <!-- Action Footer -->
   <div class="grid grid-cols-2 gap-2 md:gap-4 pt-8 md:pt-10 border-t border-stone-100">

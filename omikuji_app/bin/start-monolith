@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+
+# Start the background worker
+echo "[Monolith] Starting background worker..."
+./bin/jobs &
+
+# Start the web server
+echo "[Monolith] Starting web server with thrust..."
+exec ./bin/thrust ./bin/rails server

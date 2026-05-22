@@ -10,7 +10,8 @@ RSpec.describe FortuneGeneratorService do
 
       expect(result).to have_key(:rank)
       expect(result).to have_key(:fortune)
-      expect(result[:fortune]).to start_with("「")
+      expect(result[:fortune]).to include("「")
+      expect(result[:fortune]).to start_with("【神託】")
       puts "Generated Positive Fortune: #{result[:rank]} - #{result[:fortune]}"
     end
 

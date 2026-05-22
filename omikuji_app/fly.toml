@@ -7,10 +7,11 @@ primary_region = "nrt"
   dockerfile = "Dockerfile"
 
 [env]
-  PORT = "8080"
+  HTTP_PORT = "8080"
   RAILS_ENV = "production"
   RAILS_LOG_TO_STDOUT = "true"
   RAILS_SERVE_STATIC_FILES = "true"
+  WEB_CONCURRENCY = "1"
 
 [http_service]
   internal_port = 8080
@@ -18,34 +19,24 @@ primary_region = "nrt"
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
-  processes = ["app"]
   
   [http_service.concurrency]
     type = "requests"
     hard_limit = 25
     soft_limit = 20
 
-[[vm]]
-  memory = "1gb"
-  cpu_kind = "shared"
-  cpus = 1
+  [[http_service.checks]]
+    grace_period = "300s"
+    interval = "30s"
+    port = 8080
+    type = "tcp"
+    timeout = "15s"
 
 [[mounts]]
   source = "omikuji_data"
   destination = "/rails/storage"
 
-[deploy]
-  release_command = "./bin/rails db:prepare"
-
-[[services]]
-  internal_port = 8080
-  protocol = "tcp"
-  
-  [[services.http_checks]]
-    interval = "10s"
-    grace_period = "120s" # Markov is fast, 2 minutes is plenty
-    method = "get"
-    path = "/up"
-    protocol = "http"
-    timeout = "5s"
+[vm]
+  size = "shared-cpu-2x"
+  memory_mb = 2048
 

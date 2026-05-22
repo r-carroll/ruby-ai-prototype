@@ -2,25 +2,26 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["form", "button", "box", "loading"]
+  static values = { statusUrl: String }
 
-  shake(event) {
-    // 1. Prevent multiple clicks
+  async shake(event) {
+    // Normal submission flow - immediate submission is fine now
+    // as the background worker handles the 40s model loading.
     this.buttonTarget.disabled = true
-    
-    // 2. Start shaking animation
     this.boxTarget.classList.add("animate-shake")
-    
-    // 3. Show loading message
     this.loadingTarget.classList.remove("hidden")
   }
 
-  // Called via Turbo Stream or event when the result is returned
+  disconnect() {
+    if (this.pollInterval) clearInterval(this.pollInterval)
+  }
+
   reset() {
     this.boxTarget.classList.remove("animate-shake")
+    this.boxTarget.classList.remove("animate-pulse")
     this.buttonTarget.disabled = false
     this.loadingTarget.classList.add("hidden")
     
-    // Clear the text area for the next draw
     const textArea = this.element.querySelector("textarea")
     if (textArea) textArea.value = ""
   }

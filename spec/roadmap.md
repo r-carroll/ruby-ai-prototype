@@ -1,39 +1,46 @@
 # Project Roadmap: Sentiment Omikuji
 
-This roadmap breaks down the implementation into six logical phases.
+This roadmap tracks the evolution of the Sentiment Omikuji application.
 
-## Phase 1: Foundation & Environment
-- [ ] Initialize Rails 7 application (`rails new omikuji_app --css tailwind --database postgresql`).
-- [ ] Configure `Gemfile` with `onnxruntime`, `tokenizers`, and `turbo-rails`.
-- [ ] Set up directory structure for models (`/vendor/models`).
-- [ ] Create a `ModelLoader` initializer to handle singleton ONNX sessions.
+## Phase 1: Foundation & Environment (COMPLETED)
+- [x] Initialize Rails 8 application with Modern Defaults.
+- [x] Configure `Gemfile` with `onnxruntime`, `tokenizers`, `natto` (MeCab), and `turbo-rails`.
+- [x] Set up directory structure for models (`/models/bert_model`).
+- [x] Create a `ModelLoader` singleton to handle ONNX sessions efficiently.
 
-## Phase 2: The "Ear" (Sentiment Analysis Service)
-- [ ] Implement `SentimentAnalysisService`.
-- [ ] Port the Japanese WordPiece tokenizer logic using the `tokenizers` gem.
-- [ ] Load the BERT ONNX model and implement the `predict` method.
-- [ ] **Validation:** Create RSpec tests to verify sentiment scores for known inputs (e.g., "嬉しい" -> Positive).
+## Phase 2: The "Ear" (Sentiment Analysis Service) (COMPLETED)
+- [x] Implement `SentimentAnalysisService`.
+- [x] Port Japanese tokenization logic using `natto` and `tokenizers`.
+- [x] Load BERT ONNX model and implement `predict` method.
+- [x] **Validation:** Verified sentiment scores via RSpec.
 
-## Phase 3: The "Voice" (Fortune Generation)
-- [ ] Select and download a tiny Japanese LLM (e.g., GPT-2 Japanese Small).
-- [ ] Implement `FortuneGeneratorService`.
-- [ ] Design prompt templates for `Great Blessing`, `Small Blessing`, and `Curse` vibes.
-- [ ] **Validation:** Verify that the service returns coherent Japanese sentences based on input sentiment.
+## Phase 3: The "Voice" (Fortune Generation) (IN PROGRESS)
+- [x] Implement custom `MarkovService` for high-speed generation (Current Engine).
+- [ ] Integrate `rinna/japanese-gpt2-small` ONNX model (Future Engine).
+- [x] Design prompt templates for various sentiment ranks.
+- [x] **Validation:** Verified coherent Japanese output.
 
-## Phase 4: Core Web Workflow
-- [ ] Generate `Fortune` model (fields: `input_text`, `sentiment_score`, `fortune_text`, `rank`).
-- [ ] Build `FortunesController` and basic routes.
-- [ ] Implement the "Input Form" with `remote: true`.
-- [ ] Set up Turbo Stream responses to update the page without refresh.
+## Phase 4: Core Web Workflow & Async Architecture (COMPLETED)
+- [x] Generate `Fortune` model and database schema.
+- [x] Implement `FortunesController` and views.
+- [x] Migrate to **Solid Queue** for asynchronous ML inference.
+- [x] Set up **Solid Cable** for real-time result broadcasting.
+- [x] Implement `FortuneGenerationJob` to decouple web requests from ML processing.
 
-## Phase 5: Thematic UI & UX
-- [ ] Design the "Omikuji Slip" component using Tailwind CSS.
-- [ ] Add Stimulus.js controller for the "Box Shaking" animation.
-- [ ] Implement "Result Reveal" animations (e.g., fading in the parchment, falling blossoms).
-- [ ] Ensure mobile-friendly layout for "On-the-go" fortunes.
+## Phase 5: Thematic UI & UX (COMPLETED)
+- [x] Design the "Omikuji Slip" with Tailwind CSS.
+- [x] Add Stimulus.js controller for the shaking box animation.
+- [x] Implement Turbo Stream updates for real-time reveal.
+- [x] Mobile-friendly responsive design.
 
-## Phase 6: Deployment & Polish
-- [ ] Optimize model loading to prevent memory bloat in production.
-- [ ] Pre-populate a "Demo" mode with existing review data.
-- [ ] Deploy to a hosting provider (e.g., Fly.io or Render).
-- [ ] **Final Review:** Ensure all Student Code of Conduct requirements (from the original repo) are met.
+## Phase 6: Modern Infrastructure & Deployment (COMPLETED)
+- [x] Configure **Multi-Database SQLite** for production (primary, queue, cache, cable).
+- [x] Set up **Kamal** for zero-downtime containerized deployment.
+- [x] Integrate **Thruster** for asset acceleration and compression.
+- [x] Deploy to Fly.io (`nrt` region).
+
+## Future Polish (Planned)
+- [ ] Add "History" view for users to see their past fortunes.
+- [ ] Implement rate limiting to protect ML resources.
+- [ ] Fine-tune GPT-2 specifically on omikuji-style poetic Japanese.
+- [ ] Explore WebAssembly (Wasm) for client-side BERT inference to further reduce server load.

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_24_044549) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_04_181922) do
   create_table "fortunes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "fortune_text"
@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_24_044549) do
     t.string "rank"
     t.float "score"
     t.string "sentiment_label"
+    t.string "status"
     t.datetime "updated_at", null: false
   end
 end

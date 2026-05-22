@@ -8,19 +8,12 @@ class FortunesController < ApplicationController
 
   def create
     @fortune = Fortune.new(fortune_params)
+    @fortune.status = "pending"
 
     if @fortune.input_text.present?
-      # 1. Run Sentiment Analysis (The "Ear")
-      sentiment_result = SentimentAnalysisService.new(@fortune.input_text).predict
-      @fortune.sentiment_label = sentiment_result[:label].to_s
-      @fortune.score = sentiment_result[:score]
-
-      # 2. Run Fortune Generation (The "Voice")
-      generation_result = FortuneGeneratorService.new(sentiment_result[:label]).generate
-      @fortune.fortune_text = generation_result[:fortune]
-      @fortune.rank = generation_result[:rank]
-
       if @fortune.save
+        FortuneGenerationJob.perform_later(@fortune.id)
+        
         respond_to do |format|
           format.html { redirect_to fortune_path(@fortune) }
           format.turbo_stream
@@ -35,6 +28,18 @@ class FortunesController < ApplicationController
 
   def show
     @fortune = Fortune.find(params[:id])
+  end
+
+  def status
+    # In the new async architecture, we check if there's an active background worker
+    # instead of checking if the model is loaded in the web process.
+    worker_active = begin
+      SolidQueue::Process.active.where(kind: "Worker").any?
+    rescue
+      false
+    end
+    
+    render json: { loaded: worker_active }
   end
 
   private

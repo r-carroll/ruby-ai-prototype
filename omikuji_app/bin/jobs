@@ -3,4 +3,10 @@
 require_relative "../config/environment"
 require "solid_queue/cli"
 
+# Eagerly load the model in the worker process. 
+# This will take ~40s, but won't block the web UI.
+puts "[Worker] Eagerly loading BERT model..."
+ModelLoader.instance.bert_session
+puts "[Worker] Model loaded. Starting SolidQueue..."
+
 SolidQueue::Cli.start(ARGV)

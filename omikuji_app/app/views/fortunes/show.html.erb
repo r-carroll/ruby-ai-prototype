@@ -1,1 +1,7 @@
+<% if @fortune.status == "pending" %>
+  <% content_for :head do %>
+    <meta http-equiv="refresh" content="3">
+  <% end %>
+<% end %>
+
 <%= render partial: "fortunes/show", locals: { fortune: @fortune } %>

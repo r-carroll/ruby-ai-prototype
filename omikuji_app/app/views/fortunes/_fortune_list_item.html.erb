@@ -1,0 +1,18 @@
+<%= turbo_stream_from fortune, "list" %>
+<div id="fortune_list_<%= fortune.id %>">
+  <%= link_to fortune_path(fortune), class: "glass-card p-5 md:p-6 rounded-xl flex justify-between items-center group hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all no-underline overflow-hidden" do %>
+    <div class="flex flex-col text-left pr-4 min-w-0">
+      <span class="text-stone-400 text-[8px] md:text-[9px] font-bold uppercase mb-1 md:mb-2 tracking-widest">Echo #<%= fortune.id %></span>
+      <span class="text-stone-700 font-serif text-base md:text-lg leading-tight line-clamp-1 italic break-words">"<%= fortune.input_text %>"</span>
+    </div>
+    <div class="text-right flex-shrink-0 ml-2">
+      <span class="block font-black text-xl md:text-2xl <%= case fortune.sentiment_label; when 'positive'; 'text-green-800'; when 'neutral'; 'text-stone-600'; when 'negative'; 'text-amber-800'; else; 'text-stone-400'; end %> tracking-tighter">
+        <%= fortune.rank&.split(' ')&.first || "---" %>
+      </span>
+      <div class="flex items-center justify-end space-x-1 mt-1">
+        <div class="w-1.5 h-1.5 rounded-full <%= case fortune.sentiment_label; when 'positive'; 'bg-green-500'; when 'neutral'; 'bg-stone-400'; when 'negative'; 'bg-amber-500'; else; 'bg-stone-200 animate-pulse'; end %>"></div>
+        <span class="text-[7px] md:text-[8px] text-stone-400 font-black uppercase"><%= fortune.sentiment_label || "pending" %></span>
+      </div>
+    </div>
+  <% end %>
+</div>

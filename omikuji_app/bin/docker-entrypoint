@@ -1,8 +1,11 @@
 #!/bin/bash -e
 
-# If running the rails server then create or migrate existing database
-if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
-  ./bin/rails db:prepare
+# Detect if we are running the rails server (potentially via thrust), background worker, or the monolith script
+if [[ "$*" == *"bin/rails server"* ]] || [[ "$*" == *"bin/jobs"* ]] || [[ "$*" == *"bin/start-monolith"* ]]; then
+  if [[ -z "${SKIP_DB_PREPARE}" ]]; then
+    echo "[Entrypoint] Preparing database..."
+    ./bin/rails db:prepare
+  fi
 fi
 
 exec "${@}"

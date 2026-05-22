@@ -1,11 +1,13 @@
 <!-- omikuji_app/app/views/fortunes/index.html.erb -->
 
-<div class="max-w-3xl mx-auto py-10 md:py-20 px-4 min-h-screen flex flex-col" data-controller="omikuji">
+<div class="max-w-3xl mx-auto py-10 md:py-20 px-4 min-h-screen flex flex-col" 
+     data-controller="omikuji"
+     data-omikuji-status-url-value="<%= status_fortunes_path %>">
   <!-- Top Nav / Prominent Architecture Link -->
   <nav class="flex flex-col sm:flex-row justify-between items-center mb-12 md:mb-16 animate-slide-up space-y-4 sm:space-y-0">
     <div class="flex items-center space-x-2">
       <span class="text-2xl font-black text-red-800 tracking-widest">御神籤</span>
-      <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-stone-400">v2.0</span>
+      <span class="text-[10px] uppercase tracking-[0.2em] font-bold text-stone-400">v3.0</span>
     </div>
     <%= link_to architecture_path, class: "group flex items-center space-x-3 bg-stone-900 text-white px-5 py-2.5 rounded-full hover:bg-red-800 transition-all shadow-xl hover:shadow-red-900/20 active:scale-95" do %>
       <span class="text-[10px] font-black uppercase tracking-widest">Technical Architecture</span>
@@ -78,21 +80,7 @@
     
     <div id="recent_fortunes" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
       <% @fortunes.each do |f| %>
-        <%= link_to fortune_path(f), class: "glass-card p-5 md:p-6 rounded-xl flex justify-between items-center group hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all no-underline overflow-hidden" do %>
-          <div class="flex flex-col text-left pr-4 min-w-0">
-            <span class="text-stone-400 text-[8px] md:text-[9px] font-bold uppercase mb-1 md:mb-2 tracking-widest">Echo #<%= f.id %></span>
-            <span class="text-stone-700 font-serif text-base md:text-lg leading-tight line-clamp-1 italic break-words">"<%= f.input_text %>"</span>
-          </div>
-          <div class="text-right flex-shrink-0 ml-2">
-            <span class="block font-black text-xl md:text-2xl <%= f.sentiment_label == 'positive' ? 'text-green-800' : 'text-amber-800' %> tracking-tighter">
-              <%= f.rank.split(' ').first %>
-            </span>
-            <div class="flex items-center justify-end space-x-1 mt-1">
-              <div class="w-1.5 h-1.5 rounded-full <%= f.sentiment_label == 'positive' ? 'bg-green-500' : 'bg-amber-500' %>"></div>
-              <span class="text-[7px] md:text-[8px] text-stone-400 font-black uppercase"><%= f.sentiment_label %></span>
-            </div>
-          </div>
-        <% end %>
+        <%= render partial: "fortunes/fortune_list_item", locals: { fortune: f } %>
       <% end %>
     </div>
   </section>
@@ -100,17 +88,17 @@
   <footer class="mt-auto py-10 border-t border-stone-200/60 text-center">
     <div class="flex justify-center items-center space-x-4 mb-6">
       <div class="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-stone-100 border border-stone-200">
-        <div class="w-1.5 h-1.5 rounded-full <%= ModelLoader.instance.bert_session ? 'bg-green-500' : 'bg-red-500 animate-pulse' %>"></div>
-        <span class="text-[8px] font-black uppercase tracking-widest text-stone-500">BERT Sentiment</span>
+        <div class="w-1.5 h-1.5 rounded-full <%= (begin; SolidQueue::Process.active.where(kind: "Worker").any?; rescue; false; end) ? 'bg-green-500' : 'bg-red-500 animate-pulse' %>"></div>
+        <span class="text-[8px] font-black uppercase tracking-widest text-stone-500">Spiritual Pipeline</span>
       </div>
       <div class="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-stone-100 border border-stone-200">
-        <div class="w-1.5 h-1.5 rounded-full <%= ModelLoader.instance.markov_service ? 'bg-green-500' : 'bg-red-500 animate-pulse' %>"></div>
+        <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
         <span class="text-[8px] font-black uppercase tracking-widest text-stone-500">Markov Engine</span>
       </div>
     </div>
 
     <p class="text-[9px] md:text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] mb-6 px-4">
-      Built with Rails 7 & ONNX Runtime • Local Inference Only
+      Built with Rails 8.1 & ONNX Runtime • Local Inference Only
     </p>
     <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
       <%= link_to "carrollmedia.dev", "https://carrollmedia.dev", target: "_blank", class: "text-[10px] font-black text-stone-400 hover:text-red-800 transition-colors uppercase tracking-[0.2em]" %>
